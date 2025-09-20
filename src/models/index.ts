@@ -1,0 +1,8 @@
+export { Keyword } from './Keyword';
+export type { IKeyword, CreateKeywordInput, UpdateKeywordInput } from './Keyword';
+export { Scholar } from './Scholar';
+export type { IScholar, CreateScholarInput, UpdateScholarInput } from './Scholar';
+export { Publication } from './Publication';
+export type { IPublication, CreatePublicationInput } from './Publication';
+export type { User, CreateUserInput, UpdateUserInput } from './User';
+export type { Post, CreatePostInput, UpdatePostInput } from './Post';
