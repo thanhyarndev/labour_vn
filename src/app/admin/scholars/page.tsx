@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useToast } from "@/contexts/ToastContext";
 import { useConfirmation } from "@/hooks/useConfirmation";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog";
@@ -218,10 +219,12 @@ export default function ScholarsPage() {
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10">
                           {scholar.avatarUrl ? (
-                            <img
+                            <Image
                               className="h-10 w-10 rounded-full object-cover"
                               src={scholar.avatarUrl}
                               alt={scholar.fullName}
+                              width={40}
+                              height={40}
                             />
                           ) : (
                             <div className="h-10 w-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">

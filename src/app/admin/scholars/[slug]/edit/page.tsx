@@ -39,9 +39,7 @@ export default function EditScholarPage() {
     institutionalProfileUrl: "",
     bio: "",
     researchInterests: "",
-    expertiseAreas: "",
-    isFrequentContributor: true,
-    isActive: true
+    expertiseAreas: ""
   });
 
   const [existingSlugs, setExistingSlugs] = useState<string[]>([]);
@@ -98,9 +96,7 @@ export default function EditScholarPage() {
             institutionalProfileUrl: scholarData.institutionalProfileUrl || "",
             bio: scholarData.bio || "",
             researchInterests: scholarData.researchInterests || "",
-            expertiseAreas: scholarData.expertiseAreas || "",
-            isFrequentContributor: scholarData.frequentContributor || false,
-            isActive: scholarData.status === "active"
+            expertiseAreas: scholarData.expertiseAreas || ""
           });
           
           setManualSlug(scholarData.slug);
@@ -362,14 +358,14 @@ export default function EditScholarPage() {
           title: pub.title,
           authors: pub.authors,
           year: pub.year ? parseInt(pub.year.toString()) : undefined,
-          venue: pub.venue,
+          citationDetail: pub.citationDetail,
           type: pub.type && ["article", "book", "chapter", "conference", "report", "thesis", "other"].includes(pub.type) 
             ? pub.type 
             : "article",
           abstract: pub.abstract,
           doi: pub.doi,
           url: pub.url && pub.url.startsWith('http') ? pub.url : undefined,
-          isVietnamLaborRelated: true, // Assume all are related for now
+          isVietnamLabourRelated: true, // Assume all are related for now
           tags: []
         }))
       };
@@ -557,14 +553,13 @@ export default function EditScholarPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Position *
+                Position
               </label>
               <input
                 type="text"
                 name="position"
                 value={formData.position}
                 onChange={handleInputChange}
-                required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                 placeholder="Lecturer, Professor, etc."
               />
@@ -574,14 +569,13 @@ export default function EditScholarPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Institution *
+                Institution
               </label>
               <input
                 type="text"
                 name="institution"
                 value={formData.institution}
                 onChange={handleInputChange}
-                required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                 placeholder="University of Melbourne"
               />
@@ -610,14 +604,13 @@ export default function EditScholarPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Email *
+                Email
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                 placeholder="scholar@university.edu"
               />
@@ -725,7 +718,7 @@ export default function EditScholarPage() {
                 onChange={handleInputChange}
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
-                placeholder="Labor studies, migration, economic development..."
+                placeholder="Labour studies, migration, economic development..."
               />
             </div>
             <div>
@@ -744,38 +737,6 @@ export default function EditScholarPage() {
           </div>
         </div>
 
-        {/* Status Options */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-            Status Options
-          </h3>
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                name="isFrequentContributor"
-                checked={formData.isFrequentContributor}
-                onChange={(e) => setFormData(prev => ({ ...prev, isFrequentContributor: e.target.checked }))}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                Frequent Contributor (has 3+ publications)
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                name="isActive"
-                checked={formData.isActive}
-                onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                Active Scholar
-              </label>
-            </div>
-          </div>
-        </div>
 
         {/* Publications Section */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -821,10 +782,10 @@ export default function EditScholarPage() {
                       <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                         {publication.authors?.join(', ')} • {publication.year}
                       </p>
-                      {publication.venue && (
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                          {publication.venue}
-                        </p>
+                      {publication.citationDetail && (
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1" dangerouslySetInnerHTML={{ 
+                          __html: publication.citationDetail
+                        }} />
                       )}
                     </div>
                     <button
@@ -942,6 +903,7 @@ export default function EditScholarPage() {
         onLink={handleLinkPublication}
         scholarName={`${formData.firstName} ${formData.middleName} ${formData.lastName}`.trim()}
         loading={publicationLoading}
+        excludePublicationIds={publications.map(pub => pub._id.toString())}
       />
 
       <CreateKeywordModal
@@ -949,6 +911,7 @@ export default function EditScholarPage() {
         onClose={() => setShowCreateKeywordModal(false)}
         onSubmit={handleCreateKeyword}
         loading={keywordLoading}
+        existingKeywords={[]} // TODO: Fetch all existing keywords to prevent duplicates
       />
 
       <LinkKeywordModal
@@ -957,6 +920,7 @@ export default function EditScholarPage() {
         onLink={handleLinkKeyword}
         scholarName={`${formData.firstName} ${formData.middleName} ${formData.lastName}`.trim()}
         loading={keywordLoading}
+        excludeKeywordIds={keywords.map(keyword => keyword._id.toString())}
       />
 
       {/* Confirmation Dialog */}

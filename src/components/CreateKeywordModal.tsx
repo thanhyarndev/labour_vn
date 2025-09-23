@@ -8,13 +8,15 @@ interface CreateKeywordModalProps {
   onClose: () => void;
   onSubmit: (keywordData: CreateKeywordInput) => void;
   loading?: boolean;
+  existingKeywords?: Array<{ name: string; displayName: string; slug: string }>; // Existing keywords to check duplicates
 }
 
 export default function CreateKeywordModal({ 
   isOpen, 
   onClose, 
   onSubmit, 
-  loading = false 
+  loading = false,
+  existingKeywords = []
 }: CreateKeywordModalProps) {
   const [formData, setFormData] = useState<CreateKeywordInput>({
     name: "",
@@ -25,6 +27,7 @@ export default function CreateKeywordModal({
   });
 
   const [aliasInput, setAliasInput] = useState("");
+  const [duplicateWarning, setDuplicateWarning] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -32,6 +35,29 @@ export default function CreateKeywordModal({
       ...prev,
       [name]: value
     }));
+    
+    // Check for duplicates when name or displayName changes
+    if (name === 'name' || name === 'displayName') {
+      checkForDuplicates(name === 'name' ? value : formData.name, name === 'displayName' ? value : formData.displayName);
+    }
+  };
+
+  const checkForDuplicates = (name: string, displayName: string) => {
+    const nameLower = name.toLowerCase().trim();
+    const displayNameLower = displayName.toLowerCase().trim();
+    
+    const duplicate = existingKeywords.find(keyword => 
+      keyword.name.toLowerCase() === nameLower || 
+      keyword.displayName.toLowerCase() === displayNameLower ||
+      keyword.name.toLowerCase() === displayNameLower ||
+      keyword.displayName.toLowerCase() === nameLower
+    );
+    
+    if (duplicate) {
+      setDuplicateWarning(`Warning: A keyword with similar name already exists: "${duplicate.displayName}" (${duplicate.name})`);
+    } else {
+      setDuplicateWarning("");
+    }
   };
 
   const handleAddAlias = () => {
@@ -53,6 +79,9 @@ export default function CreateKeywordModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (duplicateWarning) {
+      return; // Don't submit if there's a duplicate warning
+    }
     onSubmit(formData);
   };
 
@@ -65,6 +94,7 @@ export default function CreateKeywordModal({
       isApproved: true
     });
     setAliasInput("");
+    setDuplicateWarning("");
     onClose();
   };
 
@@ -130,6 +160,24 @@ export default function CreateKeywordModal({
               />
             </div>
 
+            {/* Duplicate Warning */}
+            {duplicateWarning && (
+              <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                      {duplicateWarning}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Aliases
@@ -140,7 +188,7 @@ export default function CreateKeywordModal({
                   value={aliasInput}
                   onChange={(e) => setAliasInput(e.target.value)}
                   className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
-                  placeholder="e.g., labor law"
+                  placeholder="e.g., labour law"
                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddAlias())}
                 />
                 <button
@@ -209,10 +257,10 @@ export default function CreateKeywordModal({
               </button>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !!duplicateWarning}
                 className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
               >
-                {loading ? "Creating..." : "Create Keyword"}
+                {loading ? "Creating..." : duplicateWarning ? "Cannot Create (Duplicate)" : "Create Keyword"}
               </button>
             </div>
           </form>

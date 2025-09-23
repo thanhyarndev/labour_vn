@@ -12,12 +12,10 @@ export default function Header({ currentPage = "" }: HeaderProps) {
 
   const navigation = [
     { name: "Home", href: "/", current: currentPage === "home" },
-    { name: "Search", href: "/search", current: currentPage === "search" },
-    { name: "Occasional Contributors", href: "/occasional-contributors", current: currentPage === "occasional-contributors" },
     { name: "Why This Project", href: "/why-this-project", current: currentPage === "why-this-project" },
     { name: "About Us", href: "/about", current: currentPage === "about" },
     { name: "Search Guide", href: "/search-guide", current: currentPage === "search-guide" },
-    { name: "Updates", href: "/updates", current: currentPage === "updates" },
+    { name: "Updates & Insights", href: "/updates", current: currentPage === "updates" },
     { name: "Contact", href: "/contact", current: currentPage === "contact" },
   ];
 

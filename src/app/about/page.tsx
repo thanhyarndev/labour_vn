@@ -1,363 +1,284 @@
 "use client";
 
-import Link from "next/link";
-// import Image from "next/image";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export default function AboutPage() {
-  const founders = [
-    {
-      name: "Tu Phuong Nguyen",
-      title: "Lecturer in Asian Studies",
-      affiliation: "University of Melbourne",
-      education: "PhD in Sociology, University of Melbourne",
-      researchAreas: [
-        "Vietnamese labor migration",
-        "Gender and work",
-        "Social policy in Southeast Asia",
-        "Transnational families"
-      ],
-      keyPublications: [
-        "Vietnamese Migrant Workers in Taiwan: Gender, Family, and Work (2023)",
-        "Labor Rights and Social Protection for Migrant Workers in Asia (2022)",
-        "The Impact of COVID-19 on Vietnamese Labor Migration (2021)"
-      ],
-      role: "Co-founder and Research Director",
-      bio: "Dr. Tu Phuong Nguyen is a leading expert on Vietnamese labor migration and gender studies. Her research focuses on the intersection of migration, work, and family dynamics in Southeast Asia. She has published extensively on labor rights and social protection for migrant workers.",
-      avatar: "/images/tu-phuong-nguyen.jpg", // Placeholder
-      googleScholar: "https://scholar.google.com/citations?user=tuphuong",
-      orcid: "0000-0000-0000-0009"
-    },
-    {
-      name: "Trang Tran",
-      title: "Research Fellow",
-      affiliation: "Institute of Labor Science and Social Affairs",
-      education: "PhD in Economics, Vietnam National University",
-      researchAreas: [
-        "Labor economics",
-        "Social insurance policy",
-        "Minimum wage studies",
-        "Labor market analysis"
-      ],
-      keyPublications: [
-        "Social Insurance Reform in Vietnam: Challenges and Opportunities (2023)",
-        "Minimum Wage Policy and Labor Market Outcomes (2022)",
-        "The Future of Work in Vietnam: Automation and Employment (2021)"
-      ],
-      role: "Co-founder and Technical Director",
-      bio: "Dr. Trang Tran is a policy researcher specializing in labor economics and social insurance. Her work has informed numerous policy decisions in Vietnam and has been cited by international organizations including the ILO and World Bank.",
-      avatar: "/images/trang-tran.jpg", // Placeholder
-      googleScholar: "https://scholar.google.com/citations?user=trangtran",
-      orcid: "0000-0000-0000-0010"
-    }
-  ];
-
-  const projectGoals = [
-    {
-      title: "Tăng tính hiển thị của nghiên cứu",
-      description: "Tạo ra một nền tảng tập trung để các nhà nghiên cứu Việt Nam có thể dễ dàng tìm thấy và kết nối với nhau, đồng thời tăng cường khả năng tiếp cận của công chúng với các nghiên cứu về lao động.",
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        </svg>
-      )
-    },
-    {
-      title: "Hỗ trợ nghiên cứu chất lượng",
-      description: "Cung cấp công cụ và tài nguyên để các nhà nghiên cứu có thể dễ dàng tìm kiếm tài liệu, kết nối với đồng nghiệp, và chia sẻ kết quả nghiên cứu một cách hiệu quả.",
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-        </svg>
-      )
-    },
-    {
-      title: "Đảm bảo chất lượng trong thời AI",
-      description: "Trong bối cảnh trí tuệ nhân tạo phát triển mạnh, chúng tôi cam kết duy trì tính chính xác và độ tin cậy của thông tin nghiên cứu, đồng thời sử dụng công nghệ để nâng cao trải nghiệm người dùng.",
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
-      )
-    },
-    {
-      title: "Kết nối học giả với báo chí và thực hành",
-      description: "Tạo cầu nối giữa nghiên cứu học thuật và thực tiễn, giúp các nhà báo, nhà hoạch định chính sách, và các tổ chức thực hành dễ dàng tiếp cận với chuyên gia và nghiên cứu mới nhất.",
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-      )
-    }
-  ];
-
-  const statistics = [
-    { number: "50+", label: "Scholars" },
-    { number: "200+", label: "Publications" },
-    { number: "15+", label: "Research Areas" },
-    { number: "5+", label: "Years Experience" }
-  ];
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <Header currentPage="about" />
 
       {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
-              About Vietnam Labor Research Portal
-            </h1>
-            <p className="text-xl text-slate-600 dark:text-gray-300 max-w-3xl mx-auto">
-              A comprehensive platform connecting researchers, practitioners, and policymakers 
-              in Vietnam&apos;s labor studies to advance knowledge and inform evidence-based decisions.
-            </p>
-          </div>
+      <section className="relative py-20 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 overflow-hidden">
+        <div className="absolute inset-0 opacity-40">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-100/20 to-purple-100/20"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]"></div>
         </div>
-      </section>
-
-      {/* Statistics */}
-      <section className="py-12 bg-white dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {statistics.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-slate-600 dark:text-gray-300">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-8 shadow-lg">
+              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+              </svg>
+            </div>
+            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-6">
+              About Us
+            </h1>
+            <p className="text-xl text-slate-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Meet the dedicated researchers behind Vietnam Labour Research Portal
+            </p>
           </div>
         </div>
       </section>
 
       {/* Who We Are */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+      <section className="py-20 bg-white dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+            <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
               Who We Are
             </h2>
-            <p className="text-xl text-slate-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Meet the founding team behind Vietnam Labor Research Portal
-            </p>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto rounded-full"></div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {founders.map((founder, index) => (
-              <div key={index} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-                <div className="flex items-start space-x-6">
-                  <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-2xl flex-shrink-0">
-                    {founder.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+          <div className="space-y-16">
+            {/* Tu Phuong Nguyen */}
+            <div className="group relative bg-gradient-to-br from-white to-blue-50 dark:from-gray-700 dark:to-gray-800 rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-500 border border-blue-100 dark:border-gray-600">
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-t-3xl"></div>
+              
+              <div className="flex items-start space-x-6 mb-8">
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    TN
+                  </div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-                      {founder.name}
+                  <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+                    Tu Phuong Nguyen
                     </h3>
-                    <p className="text-lg text-blue-600 dark:text-blue-400 font-medium mb-1">
-                      {founder.title}
+                  <p className="text-xl text-blue-600 dark:text-blue-400 font-semibold mb-2">
+                    PhD, Australian National University
+                  </p>
+                  <p className="text-slate-600 dark:text-gray-300 text-lg">
+                    Lecturer in Asian Studies at Asia Institute, University of Melbourne, Australia
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <div className="bg-white dark:bg-gray-600 rounded-xl p-6 shadow-sm">
+                    <div className="flex items-center mb-3">
+                      <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-3">
+                        <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                      </div>
+                      <h4 className="font-bold text-slate-900 dark:text-white">Research Interests</h4>
+                    </div>
+                    <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
+                      Labour law, labour rights, labour disputes, precarious employment, social protection, and gender equality at work in Vietnam.
                     </p>
-                    <p className="text-slate-600 dark:text-gray-300 mb-4">
-                      {founder.affiliation}
-                    </p>
-                    <p className="text-sm text-slate-500 dark:text-gray-400 mb-4">
-                      {founder.education}
-                    </p>
-                    <p className="text-slate-600 dark:text-gray-300 mb-6">
-                      {founder.bio}
+                  </div>
+
+                  <div className="bg-white dark:bg-gray-600 rounded-xl p-6 shadow-sm">
+                    <div className="flex items-center mb-3">
+                      <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-3">
+                        <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <h4 className="font-bold text-slate-900 dark:text-white">Current Project</h4>
+                    </div>
+                    <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
+                      Challenges of pension reform and how factory workers and their households respond to the reform amid rising labour precarity.
                     </p>
                   </div>
                 </div>
 
                 <div className="space-y-6">
-                  <div>
-                    <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
-                      Research Areas
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {founder.researchAreas.map((area, areaIndex) => (
-                        <span
-                          key={areaIndex}
-                          className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm rounded-full"
-                        >
-                          {area}
-                        </span>
-                      ))}
+                  <div className="bg-white dark:bg-gray-600 rounded-xl p-6 shadow-sm">
+                    <div className="flex items-center mb-3">
+                      <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-3">
+                        <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                        </svg>
+                      </div>
+                      <h4 className="font-bold text-slate-900 dark:text-white">Funding</h4>
                     </div>
-                  </div>
-
-                  <div>
-                    <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
-                      Key Publications
-                    </h4>
-                    <ul className="space-y-2">
-                      {founder.keyPublications.map((pub, pubIndex) => (
-                        <li key={pubIndex} className="text-sm text-slate-600 dark:text-gray-300">
-                          • {pub}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-600">
-                    <span className="text-sm font-medium text-slate-900 dark:text-white">
-                      {founder.role}
-                    </span>
-                    <div className="flex space-x-4">
-                      {founder.googleScholar && (
-                        <a
-                          href={founder.googleScholar}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm"
-                        >
-                          Google Scholar
-                        </a>
-                      )}
-                      {founder.orcid && (
-                        <a
-                          href={`https://orcid.org/${founder.orcid}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm"
-                        >
-                          ORCID
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Why This Project */}
-      <section className="py-16 bg-white dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
-              Why This Project
-            </h2>
-            <p className="text-xl text-slate-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Our mission is to create a comprehensive, accessible, and reliable platform 
-              for Vietnam labor research that serves researchers, practitioners, and policymakers.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projectGoals.map((goal, index) => (
-              <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-8">
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-400 flex-shrink-0">
-                    {goal.icon}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">
-                      {goal.title}
-                    </h3>
                     <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
-                      {goal.description}
+                      University of Melbourne&apos;s Early Career Researcher Grant, Griffith University Postdoctoral Fellowship Scheme, and Labour Research Contest in Vietnam.
+                    </p>
+                  </div>
+
+                  <div className="bg-white dark:bg-gray-600 rounded-xl p-6 shadow-sm">
+                    <div className="flex items-center mb-3">
+                      <div className="w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mr-3">
+                        <svg className="w-4 h-4 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6" />
+                        </svg>
+                  </div>
+                      <h4 className="font-bold text-slate-900 dark:text-white">Professional Service</h4>
+                    </div>
+                    <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
+                      Vietnam Country Representative of Association of Mainland Southeast Asia Scholars (AMSEAS), member of Board of Trustees of Asian Law and Society Association (ALSA), member of ALSA award committees and ALSA annual conference&apos;s program committees.
                     </p>
                   </div>
                 </div>
               </div>
-            ))}
+
+              <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-600 dark:to-gray-700 rounded-xl p-6">
+                <div className="flex items-center mb-3">
+                  <div className="w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mr-3">
+                    <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                  </div>
+                  <h4 className="font-bold text-slate-900 dark:text-white">Consultancy Work</h4>
+                </div>
+                <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
+                  Australian Award Short Course: Knowledge Exchange - Gender Equality Law (funded by Department of Foreign Affairs and Trade, Australia); Research Methodology Training on Labour Relations Research (ILO in Vietnam and Ministry of Labour, Invalids and Social Affairs).
+                </p>
+              </div>
+            </div>
+
+            {/* With Support From */}
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900 dark:to-pink-900 rounded-full">
+                <svg className="w-6 h-6 text-purple-600 dark:text-purple-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <h3 className="text-2xl font-bold text-purple-900 dark:text-purple-100">
+                  With Support From
+                </h3>
           </div>
         </div>
-      </section>
 
-      {/* Mission Statement */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-800 dark:to-blue-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Our Mission
-          </h2>
-          <p className="text-xl text-blue-100 max-w-4xl mx-auto leading-relaxed">
-            To democratize access to Vietnam labor research, foster collaboration among scholars, 
-            and ensure that evidence-based insights reach policymakers, journalists, and practitioners 
-            who can make a real difference in workers&apos; lives.
-          </p>
-          <div className="mt-8">
-            <Link
-              href="/search"
-              className="inline-flex items-center px-8 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors"
-            >
-              Explore Our Research
-              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
-        </div>
-      </section>
+            {/* Trang Tran */}
+            <div className="group relative bg-gradient-to-br from-white to-purple-50 dark:from-gray-700 dark:to-gray-800 rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-500 border border-purple-100 dark:border-gray-600">
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-purple-500 to-pink-600 rounded-t-3xl"></div>
+              
+              <div className="flex items-start space-x-6 mb-8">
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    TT
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+                    Trang Tran
+                  </h3>
+                  <p className="text-xl text-purple-600 dark:text-purple-400 font-semibold mb-2">
+                    PhD, Monash University
+                  </p>
+                  <p className="text-slate-600 dark:text-gray-300 text-lg">
+                    Lecturer in Law at Deakin Law School, Deakin University, Australia
+                  </p>
+                </div>
+              </div>
 
-      {/* Contact Section */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
-              Get in Touch
-            </h2>
-            <p className="text-xl text-slate-600 dark:text-gray-300 mb-8">
-              Have questions or want to contribute to our research community?
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <div className="bg-white dark:bg-gray-600 rounded-xl p-6 shadow-sm">
+                    <div className="flex items-center mb-3">
+                      <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-3">
+                        <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                      </div>
+                      <h4 className="font-bold text-slate-900 dark:text-white">Research Interests</h4>
+                    </div>
+                    <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
+                      Labour law and regulatory theory, comparative labour law, labour governance in global value chain, labour resistance and digitalisation, labour history.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/search"
-                className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                Search Scholars
-              </Link>
-              <Link
-                href="/occasional-contributors"
-                className="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-slate-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium rounded-lg transition-colors"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                View Contributors
-              </Link>
+          </div>
+
+                  <div className="bg-white dark:bg-gray-600 rounded-xl p-6 shadow-sm">
+                    <div className="flex items-center mb-3">
+                      <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-3">
+                        <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <h4 className="font-bold text-slate-900 dark:text-white">Current Projects</h4>
+                    </div>
+                    <ul className="text-slate-600 dark:text-gray-300 space-y-2">
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Labour power and law in supply chain
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Grievance mechanisms in Vietnam&apos;s garment industry
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Social media and workers&apos; resistance in Vietnam
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Algorithmic management and the platform work in China
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        Migrant workers&apos; access to justice in Japan and Australia
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="bg-white dark:bg-gray-600 rounded-xl p-6 shadow-sm">
+                    <div className="flex items-center mb-3">
+                      <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-3">
+                        <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                        </svg>
+                      </div>
+                      <h4 className="font-bold text-slate-900 dark:text-white">Funding</h4>
+                    </div>
+                    <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
+                      PhD scholarship under the Australian Research Council Discovery Project (#DP190100821), Post-doctoral Research Fellowship under the Horizon European Research Council grant ERC-2022-COG (New Labour Law, Project Number 101088188).
+                    </p>
+                  </div>
+
+                  <div className="bg-white dark:bg-gray-600 rounded-xl p-6 shadow-sm">
+                    <div className="flex items-center mb-3">
+                      <div className="w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mr-3">
+                        <svg className="w-4 h-4 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6" />
+                        </svg>
+                      </div>
+                      <h4 className="font-bold text-slate-900 dark:text-white">Professional Service</h4>
+                    </div>
+                    <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
+                      Executive member of Asian Society of Labour Law
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-600 dark:to-gray-700 rounded-xl p-6">
+                <div className="flex items-center mb-3">
+                  <div className="w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mr-3">
+                    <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+              </svg>
+          </div>
+                  <h4 className="font-bold text-slate-900 dark:text-white">Consultancy Work</h4>
+        </div>
+                <p className="text-slate-600 dark:text-gray-300 leading-relaxed">
+                  Consultant (ILO in Vietnam and Geneva), Ergon Associates
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 dark:bg-gray-950 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold mb-4">Vietnam Labor Research Portal</h3>
-            <p className="text-slate-300 mb-6">
-              Advancing Vietnam labor research through collaboration and knowledge sharing
-            </p>
-            <div className="flex justify-center space-x-6">
-              <Link href="/" className="text-slate-300 hover:text-white transition-colors">
-                Home
-              </Link>
-              <Link href="/search" className="text-slate-300 hover:text-white transition-colors">
-                Search
-              </Link>
-              <Link href="/occasional-contributors" className="text-slate-300 hover:text-white transition-colors">
-                Contributors
-              </Link>
-              <Link href="/about" className="text-slate-300 hover:text-white transition-colors">
-                About
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

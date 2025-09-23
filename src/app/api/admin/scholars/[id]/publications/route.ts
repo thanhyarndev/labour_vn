@@ -100,7 +100,7 @@ export async function POST(
     const publicationCount = await Publication.countDocuments({ scholarId: id });
     const relatedPublicationCount = await Publication.countDocuments({ 
       scholarId: id, 
-      isVietnamLaborRelated: true 
+      isVietnamLabourRelated: true 
     });
     
     await Scholar.findByIdAndUpdate(id, {
@@ -168,7 +168,7 @@ export async function DELETE(
     const publicationCount = await Publication.countDocuments({ scholarId: id });
     const relatedPublicationCount = await Publication.countDocuments({ 
       scholarId: id, 
-      isVietnamLaborRelated: true 
+      isVietnamLabourRelated: true 
     });
     
     await Scholar.findByIdAndUpdate(id, {

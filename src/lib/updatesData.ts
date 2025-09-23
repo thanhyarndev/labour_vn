@@ -42,7 +42,7 @@ export const mockUpdates: UpdatePost[] = [
     title: "Upcoming Conference: 'Future of Work in Vietnam' - March 2024",
     excerpt: "Join leading researchers and policymakers for a two-day conference exploring the challenges and opportunities facing Vietnam's labour market in the digital age.",
     content: "The conference will feature keynote presentations by international experts, panel discussions on emerging labour trends, and workshops on research methodologies. Topics include: automation and employment, remote work policies, skills development for digital economy, and social protection for platform workers. Registration opens February 1st. Early bird pricing available until February 15th.",
-    author: "Conference Organizers",
+    author: "Conference Organisers",
     publishDate: "2024-01-10",
     category: "event",
     tags: ["conference", "future of work", "digital economy", "policy"],

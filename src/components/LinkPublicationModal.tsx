@@ -13,6 +13,7 @@ interface LinkPublicationModalProps {
   onLink: (publicationIds: string[]) => void;
   scholarName: string;
   loading?: boolean;
+  excludePublicationIds?: string[]; // Publications already linked to this scholar
 }
 
 export default function LinkPublicationModal({
@@ -20,7 +21,8 @@ export default function LinkPublicationModal({
   onClose,
   onLink,
   scholarName,
-  loading = false
+  loading = false,
+  excludePublicationIds = []
 }: LinkPublicationModalProps) {
   const [publications, setPublications] = useState<Publication[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,11 +56,17 @@ export default function LinkPublicationModal({
     }
   };
 
-  const filteredPublications = publications?.filter(pub =>
-    pub.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    pub.authors?.some(author => author?.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    pub.venue?.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || [];
+  const filteredPublications = publications?.filter(pub => {
+    // Exclude publications already linked to this scholar
+    if (excludePublicationIds.includes(pub._id)) {
+      return false;
+    }
+    
+    // Apply search filter
+    return pub.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+           pub.authors?.some(author => author?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+           pub.citationDetail?.toLowerCase().includes(searchQuery.toLowerCase());
+  }) || [];
 
   const handleTogglePublication = (publicationId: string) => {
     setSelectedPublications(prev => 
@@ -186,7 +194,7 @@ export default function LinkPublicationModal({
                                 {publication.authors?.join(', ')}
                               </p>
                               <p className="text-sm text-gray-500 mt-1">
-                                {publication.venue} ({publication.year})
+                                <span dangerouslySetInnerHTML={{ __html: publication.citationDetail || 'No citation detail' }} /> ({publication.year})
                               </p>
                               {publication.doi && (
                                 <p className="text-xs text-gray-400 mt-1">

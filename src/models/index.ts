@@ -4,5 +4,7 @@ export { Scholar } from './Scholar';
 export type { IScholar, CreateScholarInput, UpdateScholarInput } from './Scholar';
 export { Publication } from './Publication';
 export type { IPublication, CreatePublicationInput } from './Publication';
+export { Contact } from './Contact';
+export type { IContact } from './Contact';
 export type { User, CreateUserInput, UpdateUserInput } from './User';
 export type { Post, CreatePostInput, UpdatePostInput } from './Post';

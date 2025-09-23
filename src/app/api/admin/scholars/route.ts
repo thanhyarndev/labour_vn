@@ -4,6 +4,7 @@ import { Scholar } from "@/models/Scholar";
 import { Publication } from "@/models/Publication";
 import { Keyword } from "@/models/Keyword";
 import { ScholarCreateInput } from "@/utils/validators";
+import { generateUniqueSlug } from "@/utils/slugGenerator";
 import mongoose from "mongoose";
 
 // GET /api/admin/scholars - Lấy danh sách scholars
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest) {
     const [scholars, total] = await Promise.all([
       Scholar.find(query)
         .populate('keywordIds', 'name displayName slug')
-        .populate('publicationIds', 'title authors year venue type abstract doi url isVietnamLaborRelated')
+        .populate('publicationIds', 'title authors year citationDetail type abstract doi url isVietnamLabourRelated')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
@@ -79,7 +80,7 @@ export async function POST(request: NextRequest) {
     await connectToDatabase();
     
     const body = await request.json();
-    let session: mongoose.ClientSession | null = null;
+    let session: mongoose.ClientSession | undefined = undefined;
     
     try {
       session = await mongoose.startSession();
@@ -91,12 +92,20 @@ export async function POST(request: NextRequest) {
       const givenName = body.givenName || `${body.firstName || ''} ${body.middleName || ''}`.trim();
       const normalizedName = body.normalizedName || fullName.toLowerCase().trim();
       
+      // Generate slug if not provided
+      let slug = body.slug;
+      if (!slug) {
+        const existingScholars = await Scholar.find({}, 'slug').lean();
+        const existingSlugs = existingScholars.map(s => s.slug);
+        slug = generateUniqueSlug(fullName, existingSlugs);
+      }
+      
       const transformedBody = {
         fullName,
         familyName,
         givenName,
         normalizedName,
-        slug: body.slug,
+        slug,
         title: body.title,
         affiliation: body.affiliation || body.institution,
         department: body.department,
@@ -115,16 +124,8 @@ export async function POST(request: NextRequest) {
         newKeywords: body.newKeywords || [],
         publicationIds: body.publicationIds || [], // Existing publications by ID
         newPublications: body.newPublications || [], // New publications to create
-        publications: (body.publications || []).map((pub: any) => ({
-          ...pub,
-          scholarId: "temp", // Will be replaced after scholar creation
-          year: pub.year ? parseInt(pub.year) : undefined,
-          type: pub.type && ["article", "book", "chapter", "conference", "conference-paper", "report", "thesis", "other", "journal-article"].includes(pub.type) 
-            ? pub.type 
-            : "article",
-          url: pub.url && pub.url.startsWith('http') ? pub.url : undefined
-        })),
-        status: body.status || (body.isActive ? "active" : "hidden")
+        // Removed legacy publications field to prevent duplicates
+        status: body.status || "active"
       };
       
       console.log('transformedBody department:', transformedBody.department);
@@ -290,7 +291,8 @@ export async function POST(request: NextRequest) {
               );
             }
             allPublications.push(pub);
-            if (pub.isVietnamLaborRelated) relatedCount += 1;
+            // For Vietnam Labor Research Portal, all linked publications are considered related
+            if (pub.isVietnamLabourRelated !== false) relatedCount += 1;
           }
           
           // Update scholar with publication IDs
@@ -314,7 +316,7 @@ export async function POST(request: NextRequest) {
             const pubKeywordSlugs = p.keywordSlugs || [];
             const mapped = allKeywords.filter((k: any) => pubKeywordSlugs.includes(k.slug));
             const pubKeywordIds = mapped.map(k => k._id);
-            const isRelated = p.isVietnamLaborRelated ?? true;
+            const isRelated = p.isVietnamLabourRelated ?? true;
             if (isRelated) relatedCount += 1;
             
             // Map journal-article to article for database storage
@@ -324,7 +326,7 @@ export async function POST(request: NextRequest) {
               scholarIds: [s._id],
               title: p.title,
               year: p.year,
-              venue: p.venue,
+              citationDetail: p.citationDetail,
               type: pubType,
               authors: p.authors || [],
               abstract: p.abstract,
@@ -333,7 +335,7 @@ export async function POST(request: NextRequest) {
               url: p.url && p.url.trim() !== '' ? p.url : undefined,
               keywordIds: pubKeywordIds,
               tags: p.tags || [],
-              isVietnamLaborRelated: isRelated,
+              isVietnamLabourRelated: isRelated,
               citations: 0,
             };
           });
@@ -390,14 +392,14 @@ export async function POST(request: NextRequest) {
         }
       }
       
-      // 3.3) Legacy: Handle old publications format (for backward compatibility)
-      if (input.publications && input.publications.length > 0) {
+      // Legacy publications section removed to prevent duplicates
+      if (false) { // Disabled legacy publications
         try {
           const legacyPubDocs = input.publications.map((p: any) => {
             const pubKeywordSlugs = p.keywordSlugs || [];
             const mapped = allKeywords.filter((k: any) => pubKeywordSlugs.includes(k.slug));
             const pubKeywordIds = mapped.map(k => k._id);
-            const isRelated = p.isVietnamLaborRelated ?? true;
+            const isRelated = p.isVietnamLabourRelated ?? true;
             if (isRelated) relatedCount += 1;
             
             // Map journal-article to article for database storage
@@ -407,7 +409,7 @@ export async function POST(request: NextRequest) {
               scholarIds: [s._id],
               title: p.title,
               year: p.year,
-              venue: p.venue,
+              citationDetail: p.citationDetail,
               type: pubType,
               authors: p.authors || [],
               abstract: p.abstract,
@@ -416,7 +418,7 @@ export async function POST(request: NextRequest) {
               url: p.url && p.url.trim() !== '' ? p.url : undefined,
               keywordIds: pubKeywordIds,
               tags: p.tags || [],
-              isVietnamLaborRelated: isRelated,
+              isVietnamLabourRelated: isRelated,
               citations: 0,
             };
           });
@@ -440,19 +442,29 @@ export async function POST(request: NextRequest) {
         }
       }
       
-      // Update scholar with publication counts
+      // Update scholar with publication counts and IDs
       if (allPublications.length > 0) {
+        const publicationIds = allPublications.map(pub => pub._id);
+        const frequentContributor = relatedCount >= 3;
         await Scholar.updateOne(
           { _id: s._id },
           { $set: { 
+            publicationIds: publicationIds,
             publicationCount: allPublications.length, 
-            relatedPublicationCount: relatedCount 
+            relatedPublicationCount: relatedCount,
+            frequentContributor: frequentContributor
           } },
           { session }
         );
       }
 
       await session.commitTransaction();
+      
+      // Fetch updated scholar with populated data
+      const updatedScholar = await Scholar.findById(s._id)
+        .populate('keywordIds', 'name displayName slug')
+        .populate('publicationIds', 'title authors year citationDetail type abstract doi url isVietnamLabourRelated')
+        .lean();
       
       // Prepare detailed result
       const result = { 
@@ -490,10 +502,7 @@ export async function POST(request: NextRequest) {
       
       return NextResponse.json({
         success: true,
-        data: {
-          ...s.toObject(),
-          department: s.department
-        },
+        data: updatedScholar,
         result
       }, { status: 201 });
     } catch (err: any) {

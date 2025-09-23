@@ -88,10 +88,10 @@ export interface CreateScholarInput {
   lastName: string;
   middleName?: string;
   title?: string;
-  position: string;
-  institution: string;
+  position?: string;
+  institution?: string;
   department?: string;
-  email: string;
+  email?: string;
   phone?: string;
   website?: string;
   orcidId?: string;
@@ -100,8 +100,6 @@ export interface CreateScholarInput {
   bio?: string;
   researchInterests?: string;
   expertiseAreas?: string;
-  isFrequentContributor?: boolean;
-  isActive?: boolean;
   slug?: string; // Will be auto-generated
 }
 
@@ -122,7 +120,5 @@ export interface UpdateScholarInput {
   bio?: string;
   researchInterests?: string;
   expertiseAreas?: string;
-  isFrequentContributor?: boolean;
-  isActive?: boolean;
   slug?: string;
 }

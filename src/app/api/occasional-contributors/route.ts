@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     const [scholars, total] = await Promise.all([
       Scholar.find(query)
         .populate('keywordIds', 'name displayName slug')
-        .populate('publicationIds', 'title authors year venue type abstract doi url isVietnamLaborRelated')
+        .populate('publicationIds', 'title authors year citationDetail type abstract doi url isVietnamLabourRelated')
         .sort(sort)
         .skip(skip)
         .limit(limit)

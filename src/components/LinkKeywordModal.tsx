@@ -14,6 +14,7 @@ interface LinkKeywordModalProps {
   onLink: (keywordIds: string[]) => void;
   scholarName: string;
   loading?: boolean;
+  excludeKeywordIds?: string[]; // Keywords already linked to this scholar
 }
 
 export default function LinkKeywordModal({ 
@@ -21,7 +22,8 @@ export default function LinkKeywordModal({
   onClose, 
   onLink, 
   scholarName,
-  loading = false 
+  loading = false,
+  excludeKeywordIds = []
 }: LinkKeywordModalProps) {
   const [keywords, setKeywords] = useState<Keyword[]>([]);
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
@@ -76,11 +78,17 @@ export default function LinkKeywordModal({
     onClose();
   };
 
-  const filteredKeywords = keywords?.filter(keyword =>
-    keyword.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    keyword.displayName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    keyword.description?.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
+  const filteredKeywords = keywords?.filter(keyword => {
+    // Exclude keywords already linked to this scholar
+    if (excludeKeywordIds.includes(keyword._id)) {
+      return false;
+    }
+    
+    // Apply search filter
+    return keyword.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           keyword.displayName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           keyword.description?.toLowerCase().includes(searchTerm.toLowerCase());
+  }) || [];
 
   if (!isOpen) return null;
 

@@ -25,7 +25,7 @@ export async function GET(
     
     const scholar = await Scholar.findById(id)
       .populate('keywordIds', 'name displayName slug')
-      .populate('publicationIds', 'title authors year venue type abstract doi url isVietnamLaborRelated')
+      .populate('publicationIds', 'title authors year citationDetail type abstract doi url isVietnamLabourRelated')
       .lean();
     
     if (!scholar) {
@@ -98,7 +98,7 @@ export async function PUT(
           : "article",
         url: pub.url && pub.url.trim() !== '' && pub.url.startsWith('http') ? pub.url : undefined
       })),
-      status: body.status || (body.isActive ? "active" : "hidden")
+      status: body.status || "active"
     };
     
     const input = ScholarCreateInput.parse(transformedBody);
@@ -143,7 +143,7 @@ export async function PUT(
         const pubData = {
           title: pub.title,
           year: pub.year ? parseInt(pub.year) : undefined,
-          venue: pub.venue,
+          citationDetail: pub.citationDetail,
           type: pubType,
           authors: pub.authors || [],
           abstract: pub.abstract,
@@ -152,11 +152,11 @@ export async function PUT(
           url: pub.url && pub.url.trim() !== '' ? pub.url : undefined,
           keywordIds: [], // Will be handled separately if needed
           tags: pub.tags || [],
-          isVietnamLaborRelated: pub.isVietnamLaborRelated ?? true,
+          isVietnamLabourRelated: pub.isVietnamLabourRelated ?? true,
           citations: 0,
         };
         
-        // If publication has an _id, update it; otherwise create new
+        // If publication has an _id, update it
         if (pub._id) {
           const updatedPub = await Publication.findByIdAndUpdate(
             pub._id,
@@ -165,11 +165,31 @@ export async function PUT(
           );
           return updatedPub;
         } else {
-          const newPub = await Publication.create({
-            ...pubData,
-            scholarIds: [id]
+          // Check if publication already exists by title and authors (case-insensitive)
+          const existingPub = await Publication.findOne({
+            title: { $regex: new RegExp(`^${pubData.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') },
+            authors: { $all: pubData.authors, $size: pubData.authors.length }
           });
-          return newPub;
+          
+          if (existingPub) {
+            // Link existing publication to scholar
+            const updatedPub = await Publication.findByIdAndUpdate(
+              existingPub._id,
+              { 
+                ...pubData, // Update with new data
+                $addToSet: { scholarIds: id } 
+              },
+              { new: true }
+            );
+            return updatedPub;
+          } else {
+            // Create new publication only if it doesn't exist
+            const newPub = await Publication.create({
+              ...pubData,
+              scholarIds: [id]
+            });
+            return newPub;
+          }
         }
       });
       
@@ -234,8 +254,22 @@ export async function PUT(
       console.log('Total publications:', allPublications.length);
     }
     
+    // Remove duplicates from allPublications array (keep only unique publications)
+    const uniquePublications = [];
+    const seenIds = new Set();
+    
+    for (const pub of allPublications) {
+      if (!seenIds.has(pub._id.toString())) {
+        uniquePublications.push(pub);
+        seenIds.add(pub._id.toString());
+      }
+    }
+    
+    // Update publicationIds to only include unique publications
+    const uniquePublicationIds = uniquePublications.map(pub => pub._id);
+    
     // Remove scholar from publications that are no longer linked
-    if (publicationIds.length > 0) {
+    if (uniquePublicationIds.length > 0) {
       await Publication.updateMany(
         { scholarIds: id },
         { $pull: { scholarIds: id } }
@@ -243,7 +277,7 @@ export async function PUT(
       
       // Re-add scholar to current publications
       await Publication.updateMany(
-        { _id: { $in: publicationIds } },
+        { _id: { $in: uniquePublicationIds } },
         { $addToSet: { scholarIds: id } }
       );
     } else {
@@ -255,10 +289,12 @@ export async function PUT(
     }
     
     // Calculate final counts
-    publicationCount = allPublications.length;
-    relatedPublicationCount = allPublications.filter(pub => pub.isVietnamLaborRelated).length;
+    publicationCount = uniquePublications.length;
+    // For Vietnam Labor Research Portal, all linked publications are considered related
+    relatedPublicationCount = uniquePublications.filter(pub => pub.isVietnamLabourRelated !== false).length;
+    const frequentContributor = relatedPublicationCount >= 3;
     
-    console.log('Final counts - publicationCount:', publicationCount, 'relatedPublicationCount:', relatedPublicationCount);
+    console.log('Final counts - publicationCount:', publicationCount, 'relatedPublicationCount:', relatedPublicationCount, 'frequentContributor:', frequentContributor);
     
     const scholar = await Scholar.findByIdAndUpdate(
       id,
@@ -266,14 +302,15 @@ export async function PUT(
         ...input,
         keywordIds,
         keywordNames,
-        publicationIds,
+        publicationIds: uniquePublicationIds,
         publicationCount,
         relatedPublicationCount,
+        frequentContributor,
         normalizedName: input.normalizedName.trim().toLowerCase(),
       },
       { new: true, runValidators: true }
     ).populate('keywordIds', 'name displayName slug')
-     .populate('publicationIds', 'title authors year venue type abstract doi url isVietnamLaborRelated');
+     .populate('publicationIds', 'title authors year citationDetail type abstract doi url isVietnamLabourRelated');
     
     if (!scholar) {
       return NextResponse.json(

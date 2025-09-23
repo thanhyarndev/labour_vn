@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     
     const skip = (page - 1) * limit;
     
-    // First, try to find keywords that match the query
+    // Only search by keywords - find keywords that match the query
     const matchingKeywords = await Keyword.find({
       $or: [
         { name: { $regex: query, $options: 'i' } },
@@ -38,29 +38,31 @@ export async function GET(request: NextRequest) {
       isApproved: true
     });
     
-    // Build search query for scholars
+    // If no matching keywords found, return empty results
+    if (matchingKeywords.length === 0) {
+      return NextResponse.json({
+        success: true,
+        data: [],
+        pagination: {
+          page,
+          limit,
+          total: 0,
+          pages: 0
+        }
+      });
+    }
+    
+    // Build search query for scholars - only search by keyword IDs
+    const keywordIds = matchingKeywords.map(k => k._id);
     const scholarQuery: any = {
       status: 'active',
-      $or: [
-        { fullName: { $regex: query, $options: 'i' } },
-        { normalizedName: { $regex: query, $options: 'i' } },
-        { affiliation: { $regex: query, $options: 'i' } },
-        { position: { $regex: query, $options: 'i' } },
-        { researchInterests: { $regex: query, $options: 'i' } },
-        { expertiseAreas: { $regex: query, $options: 'i' } }
-      ]
+      keywordIds: { $in: keywordIds }
     };
-    
-    // If we found matching keywords, also search by keyword IDs
-    if (matchingKeywords.length > 0) {
-      const keywordIds = matchingKeywords.map(k => k._id);
-      scholarQuery.$or.push({ keywordIds: { $in: keywordIds } });
-    }
     
     const [scholars, total] = await Promise.all([
       Scholar.find(scholarQuery)
         .populate('keywordIds', 'name displayName slug')
-        .populate('publicationIds', 'title authors year venue type abstract doi url isVietnamLaborRelated')
+        .populate('publicationIds', 'title authors year citationDetail type abstract doi url isVietnamLabourRelated')
         .sort({ 
           frequentContributor: -1, 
           publicationCount: -1, 

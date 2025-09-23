@@ -229,7 +229,7 @@ export default function EditKeywordPage() {
                   value={formData.displayName}
                   onChange={handleInputChange}
                   className="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
-                  placeholder="Example: Labor Law"
+                  placeholder="Example: Labour Law"
                 />
                 <p className="text-xs text-gray-500">Display name for users</p>
               </div>
@@ -252,7 +252,7 @@ export default function EditKeywordPage() {
                     value={formData.slug}
                     onChange={handleInputChange}
                     className="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
-                    placeholder="labor-law"
+                    placeholder="labour-law"
                   />
                   {!isSlugManuallyEdited && formData.slug && (
                     <button
@@ -288,7 +288,7 @@ export default function EditKeywordPage() {
                 value={formData.name}
                 onChange={handleInputChange}
                 className="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 bg-gray-50"
-                placeholder="labor-law"
+                placeholder="labour-law"
                 readOnly
               />
               <p className="text-xs text-gray-500">No diacritics, lowercase, automatically synced with slug</p>
@@ -305,7 +305,7 @@ export default function EditKeywordPage() {
                 value={formData.aliases}
                 onChange={handleInputChange}
                 className="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
-                placeholder="labor law, employment law, work law"
+                placeholder="labour law, employment law, work law"
               />
               <p className="text-xs text-gray-500">Synonyms separated by commas</p>
             </div>

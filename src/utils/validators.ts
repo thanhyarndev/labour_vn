@@ -15,14 +15,14 @@ export const PublicationInput = z.object({
 scholarId: z.string().min(1).optional(), // Optional: scholar ID (will be set during creation)
 title: z.string().min(1),
 year: z.number().int().optional(),
-venue: z.string().optional(),
+citationDetail: z.string().optional(),
 type: z.enum(["article","book","chapter","conference","conference-paper","report","thesis","other","journal-article"]).optional(),
 authors: z.array(z.string()).optional().default([]),
 abstract: z.string().optional(),
 quote: z.string().optional(),
 doi: z.string().optional(),
   url: z.string().url().optional().or(z.undefined()).or(z.literal("")),
-isVietnamLaborRelated: z.boolean().nullable().optional(),
+isVietnamLabourRelated: z.boolean().nullable().optional(),
 tags: z.array(z.string()).optional().default([]),
 });
 
@@ -32,7 +32,7 @@ export const ScholarCreateInput = z.object({
   familyName: z.string().optional(),
   givenName: z.string().optional(),
   normalizedName: z.string().min(1),
-  slug: z.string().min(1),
+  slug: z.string().min(1).optional(),
   title: z.string().optional(),
   affiliation: z.string().optional(),
   department: z.string().optional(),

@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
       query.$or = [
         { title: { $regex: search, $options: 'i' } },
         { authors: { $in: [new RegExp(search, 'i')] } },
-        { venue: { $regex: search, $options: 'i' } }
+        { citationDetail: { $regex: search, $options: 'i' } }
       ];
     }
 
@@ -42,12 +42,12 @@ export async function GET(request: NextRequest) {
       query.type = type;
     }
 
-    // Filter by isVietnamLaborRelated
-    const isVietnamLaborRelated = searchParams.get('isVietnamLaborRelated');
-    if (isVietnamLaborRelated === 'true') {
-      query.isVietnamLaborRelated = true;
-    } else if (isVietnamLaborRelated === 'false') {
-      query.isVietnamLaborRelated = false;
+    // Filter by isVietnamLabourRelated
+    const isVietnamLabourRelated = searchParams.get('isVietnamLabourRelated');
+    if (isVietnamLabourRelated === 'true') {
+      query.isVietnamLabourRelated = true;
+    } else if (isVietnamLabourRelated === 'false') {
+      query.isVietnamLabourRelated = false;
     }
 
     // Get total count for pagination
@@ -102,14 +102,14 @@ export async function POST(request: NextRequest) {
       title: body.title,
       authors: body.authors,
       year: body.year || new Date().getFullYear(),
-      venue: body.journalPublisher || '',
+      citationDetail: body.citationDetail || '',
       type: body.publicationType === 'journal-article' ? 'article' : (body.publicationType || 'article'),
       abstract: body.abstract || '',
       quote: body.quote || '',
       doi: body.doi && body.doi.trim() !== '' ? body.doi : undefined,
       url: body.url && body.url.trim() !== '' ? body.url : undefined,
       citations: body.citationCount || 0,
-      isVietnamLaborRelated: body.isSelected || false,
+      isVietnamLabourRelated: body.isVietnamLabourRelated ?? true,
       scholarIds: [], // Will be linked when scholar is created
       keywordIds: [], // Will be linked when keywords are available
       tags: []

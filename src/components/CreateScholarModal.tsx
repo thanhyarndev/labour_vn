@@ -222,7 +222,7 @@ export function CreateScholarModal({ isOpen, onClose, onScholarCreated }: Create
                 value={formData.researchInterests}
                 onChange={handleInputChange}
                 className="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
-                placeholder="Labor economics, Social policy, Migration studies"
+                placeholder="Labour economics, Social policy, Migration studies"
               />
               <p className="text-xs text-gray-500">Separate interests with commas</p>
             </div>
@@ -238,7 +238,7 @@ export function CreateScholarModal({ isOpen, onClose, onScholarCreated }: Create
                 value={formData.keywords}
                 onChange={handleInputChange}
                 className="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
-                placeholder="labor law, employment, workers rights"
+                placeholder="labour law, employment, workers rights"
               />
               <p className="text-xs text-gray-500">Separate keywords with commas</p>
             </div>

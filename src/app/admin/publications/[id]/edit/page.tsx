@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/contexts/ToastContext";
+import SimpleRichTextEditor from "@/components/SimpleRichTextEditor";
 
 interface Publication {
   _id: string;
   title: string;
   year?: number;
-  venue?: string;
+  citationDetail?: string;
   type?: string;
   authors: string[];
   abstract?: string;
@@ -16,7 +17,7 @@ interface Publication {
   doi?: string;
   url?: string;
   citations: number;
-  isVietnamLaborRelated?: boolean | null;
+  isVietnamLabourRelated?: boolean | null;
   tags: string[];
   createdAt: string;
   updatedAt: string;
@@ -31,7 +32,7 @@ export default function EditPublicationPage({ params }: { params: Promise<{ id: 
   const [formData, setFormData] = useState({
     title: "",
     year: "",
-    journalPublisher: "",
+    citationDetail: "",
     publicationType: "article" as "article" | "journal-article" | "book" | "chapter" | "conference" | "report" | "thesis" | "other",
     authors: "",
     abstract: "",
@@ -55,7 +56,7 @@ export default function EditPublicationPage({ params }: { params: Promise<{ id: 
           setFormData({
             title: pub.title || "",
             year: pub.year?.toString() || "",
-            journalPublisher: pub.venue || "",
+            citationDetail: pub.citationDetail || "",
             publicationType: pub.type === "article" ? "article" : (pub.type as "article" | "journal-article" | "book" | "chapter" | "conference" | "report" | "thesis" | "other") || "article",
             authors: pub.authors?.join(", ") || "",
             abstract: pub.abstract || "",
@@ -63,7 +64,7 @@ export default function EditPublicationPage({ params }: { params: Promise<{ id: 
             url: pub.url || "",
             citationCount: pub.citations?.toString() || "",
             quote: pub.quote || "",
-            isSelected: pub.isVietnamLaborRelated === true,
+            isSelected: pub.isVietnamLabourRelated === true,
           });
         } else {
           showError("Data Loading Error", data.error || "Unable to load publication information");
@@ -107,14 +108,14 @@ export default function EditPublicationPage({ params }: { params: Promise<{ id: 
           title: formData.title,
           authors: authorsArray,
           year: formData.year ? parseInt(formData.year) : undefined,
-          venue: formData.journalPublisher,
+          citationDetail: formData.citationDetail,
           type: formData.publicationType === 'journal-article' ? 'article' : formData.publicationType,
           abstract: formData.abstract,
           quote: formData.quote,
           doi: formData.doi && formData.doi.trim() !== '' ? formData.doi : undefined,
           url: formData.url && formData.url.trim() !== '' ? formData.url : undefined,
           citations: formData.citationCount ? parseInt(formData.citationCount) : 0,
-          isVietnamLaborRelated: formData.isSelected,
+          isVietnamLabourRelated: formData.isSelected,
         }),
       });
 
@@ -278,18 +279,18 @@ export default function EditPublicationPage({ params }: { params: Promise<{ id: 
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="journalPublisher" className="block text-sm font-semibold text-gray-700">
-                Publication Venue
+              <label htmlFor="citationDetail" className="block text-sm font-semibold text-gray-700">
+                Citation Detail
               </label>
-              <input
-                type="text"
-                name="journalPublisher"
-                id="journalPublisher"
-                value={formData.journalPublisher}
-                onChange={handleInputChange}
-                className="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
-                placeholder="Journal, publisher, conference..."
+              <SimpleRichTextEditor
+                value={formData.citationDetail}
+                onChange={(value) => setFormData(prev => ({ ...prev, citationDetail: value }))}
+                placeholder="Journal, publisher, conference... (Use Ctrl+B for bold, Ctrl+I for italic)"
+                className="w-full"
               />
+              <div className="text-xs text-gray-500 mt-1">
+                Use <kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">Ctrl+B</kbd> for bold, <kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">Ctrl+I</kbd> for italic
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -389,7 +390,7 @@ export default function EditPublicationPage({ params }: { params: Promise<{ id: 
 
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
-                  Vietnam Labor Related
+                  Vietnam Labour Related
                 </label>
                 <div className="flex items-center p-3 rounded-lg border border-gray-200">
                   <input
@@ -402,7 +403,7 @@ export default function EditPublicationPage({ params }: { params: Promise<{ id: 
                   />
                   <div className="ml-3">
                     <span className="text-sm font-medium text-gray-700">Yes</span>
-                    <p className="text-xs text-gray-500">This publication is related to Vietnam labor issues</p>
+                    <p className="text-xs text-gray-500">This publication is related to Vietnam labour issues</p>
                   </div>
                 </div>
               </div>

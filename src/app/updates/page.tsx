@@ -280,7 +280,7 @@ export default function UpdatesPage() {
               <Link href="/" className="text-slate-300 hover:text-white transition-colors">
                 Home
               </Link>
-              <Link href="/search" className="text-slate-300 hover:text-white transition-colors">
+              <Link href="/" className="text-slate-300 hover:text-white transition-colors">
                 Search
               </Link>
               <Link href="/occasional-contributors" className="text-slate-300 hover:text-white transition-colors">

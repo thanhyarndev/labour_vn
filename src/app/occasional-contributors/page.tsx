@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import Header from "@/components/Header";
 
 interface Scholar {
@@ -38,11 +37,11 @@ interface Scholar {
     year?: number;
     type?: string;
     authors: string[];
-    venue?: string;
+    citationDetail?: string;
     abstract?: string;
     doi?: string;
     url?: string;
-    isVietnamLaborRelated?: boolean;
+    isVietnamLabourRelated?: boolean;
   }>;
   publicationCount: number;
   relatedPublicationCount: number;
@@ -59,6 +58,7 @@ export default function OccasionalContributorsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "publications" | "affiliation">("name");
   const [loading, setLoading] = useState(true);
+  const [highlightedScholar, setHighlightedScholar] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchOccasionalContributors = async () => {
@@ -85,6 +85,63 @@ export default function OccasionalContributorsPage() {
     };
 
     fetchOccasionalContributors();
+  }, []);
+
+  // Handle anchor scrolling when page loads
+  useEffect(() => {
+    const handleScrollToHash = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const element = document.querySelector(hash);
+        if (element) {
+          // Add a small offset to account for fixed header
+          const headerOffset = 80;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+          
+          // Add highlight effect to the target element
+          const scholarSlug = hash.substring(1); // Remove # from hash
+          setHighlightedScholar(scholarSlug);
+          setTimeout(() => {
+            setHighlightedScholar(null);
+          }, 3000);
+        }
+      }
+    };
+
+    // Wait for content to load, then scroll to the element
+    if (filteredScholars.length > 0) {
+      const timer = setTimeout(handleScrollToHash, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [filteredScholars]);
+
+  // Also handle hash changes when navigating within the page
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const element = document.querySelector(hash);
+        if (element) {
+          const headerOffset = 80;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   useEffect(() => {
@@ -124,11 +181,10 @@ export default function OccasionalContributorsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
-              Occasional Contributors
+              Occasional contributors
             </h1>
-            <p className="text-lg text-slate-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Discover researchers who contribute valuable insights to Vietnam labor studies. 
-              These scholars may not publish as frequently but provide important perspectives and expertise.
+            <p className="text-lg text-slate-600 dark:text-gray-300 max-w-4xl mx-auto">
+              This section features scholars who have made valuable contributions with one or two publications on Vietnam labour as part of their broader research.
             </p>
           </div>
         </div>
@@ -186,120 +242,98 @@ export default function OccasionalContributorsPage() {
           </div>
 
           {filteredScholars.length > 0 ? (
-            <div className="space-y-6">
+            <div className="space-y-8">
               {filteredScholars.map((scholar) => (
                 <div
                   key={scholar._id}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-600 p-6"
+                  id={scholar.slug}
+                  className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 p-6 transition-all duration-300 scroll-mt-20 ${
+                    highlightedScholar === scholar.slug 
+                      ? 'ring-2 ring-green-500 ring-opacity-50 shadow-lg' 
+                      : ''
+                  }`}
                 >
-                  <div className="flex items-start space-x-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-                      {scholar.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-1">
-                            {scholar.fullName}
-                          </h3>
-                          <p className="text-sm text-green-600 dark:text-green-400 font-medium mb-1">
-                            {scholar.position}
-                          </p>
-                          <p className="text-sm text-slate-600 dark:text-gray-300">
-                            {scholar.affiliation}
-                          </p>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-xs rounded-full">
-                            Occasional Contributor
-                          </span>
-                          <Link
-                            href={`/scholars/${scholar.slug}`}
-                            className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 text-sm font-medium"
-                          >
-                            View Profile →
-                          </Link>
-                        </div>
-                      </div>
+                  {/* Scholar Name */}
+                  <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
+                    {scholar.fullName}
+                  </h3>
 
-                      {/* Keywords */}
-                      <div className="flex flex-wrap gap-1 mb-4">
-                        {scholar.keywordIds.map((keyword, index) => (
-                          <span
-                            key={index}
-                            className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs rounded-full"
-                          >
-                            {keyword.displayName}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Selected Publications with Quotes */}
-                      {scholar.publicationIds.length > 0 && (
-                        <div className="space-y-4">
-                          <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                            Key Publications:
-                          </h4>
-                          {scholar.publicationIds.slice(0, 2).map((publication) => (
-                            <div key={publication._id} className="border-l-4 border-green-500 pl-4 py-2">
-                              <h5 className="font-medium text-slate-900 dark:text-white text-sm mb-1">
-                                {publication.title}
-                              </h5>
-                              <div className="text-xs text-slate-500 dark:text-gray-400 mb-2">
-                                <span>{publication.venue}</span>
-                                {publication.year && (
-                                  <>
-                                    <span className="mx-2">•</span>
-                                    <span>{publication.year}</span>
-                                  </>
-                                )}
-                              </div>
-                              {publication.abstract && (
-                                <blockquote className="text-sm text-slate-600 dark:text-gray-300 italic border-l-2 border-gray-200 dark:border-gray-600 pl-3">
-                                  &ldquo;{publication.abstract.substring(0, 150)}...&rdquo;
-                                </blockquote>
-                              )}
-                            </div>
-                          ))}
-                        </div>
+                  {/* Website Links */}
+                  <div className="mb-4">
+                    <div className="flex flex-wrap gap-4 text-sm">
+                      {scholar.scholarUrl && (
+                        <a
+                          href={scholar.scholarUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 underline"
+                        >
+                          Google Scholar
+                        </a>
                       )}
-
-                      {/* Bio excerpt */}
-                      {scholar.bio && (
-                        <p className="text-sm text-slate-600 dark:text-gray-300 mt-4 line-clamp-2">
-                          {scholar.bio}
-                        </p>
+                      {scholar.institutionalProfileUrl && (
+                        <a
+                          href={scholar.institutionalProfileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 underline"
+                        >
+                          Institutional Profile
+                        </a>
                       )}
-
-                      <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
-                        <div className="text-sm text-slate-500 dark:text-gray-400">
-                          {scholar.publicationCount} publication{scholar.publicationCount !== 1 ? 's' : ''}
-                        </div>
-                        <div className="flex space-x-4">
-                          {scholar.scholarUrl && (
-                            <a
-                              href={scholar.scholarUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 text-sm"
-                            >
-                              Google Scholar
-                            </a>
-                          )}
-                          {scholar.institutionalProfileUrl && (
-                            <a
-                              href={scholar.institutionalProfileUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 text-sm"
-                            >
-                              Institutional Profile
-                            </a>
-                          )}
-                        </div>
-                      </div>
+                      {scholar.homepageUrl && (
+                        <a
+                          href={scholar.homepageUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 underline"
+                        >
+                          Website
+                        </a>
+                      )}
                     </div>
                   </div>
+
+                  {/* Keywords */}
+                  <div className="mb-4">
+                    <span className="text-sm font-medium text-slate-700 dark:text-gray-300">Keywords: </span>
+                    <div className="inline-flex flex-wrap gap-1">
+                      {scholar.keywordIds.map((keyword, index) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs rounded-full"
+                        >
+                          {keyword.displayName}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Selected Publications */}
+                  {scholar.publicationIds.length > 0 && (
+                    <div className="space-y-3">
+                      {scholar.publicationIds.slice(0, 2).map((publication) => (
+                        <div key={publication._id} className="text-sm text-slate-600 dark:text-gray-300">
+                          <div className="flex items-start">
+                            <span className="text-green-600 dark:text-green-400 mr-2">•</span>
+                            <div>
+                              <div className="font-medium text-slate-900 dark:text-white mb-1">
+                                {publication.title}
+                              </div>
+                              <div className="text-xs text-slate-500 dark:text-gray-400" dangerouslySetInnerHTML={{ 
+                                __html: publication.citationDetail || '' 
+                              }} />
+                              {publication.year && (
+                                <span className="text-xs text-slate-500 dark:text-gray-400">
+                                  {publication.year}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

@@ -16,7 +16,7 @@ interface Publication {
   }>;
   title: string;
   year?: number;
-  venue?: string;
+  citationDetail?: string;
   type?: string;
   authors: string[];
   abstract?: string;
@@ -30,7 +30,7 @@ interface Publication {
     slug: string;
   }>;
   tags: string[];
-  isVietnamLaborRelated?: boolean | null;
+  isVietnamLabourRelated?: boolean | null;
   citations: number;
   createdAt: string;
   updatedAt: string;
@@ -47,7 +47,7 @@ export default function PublicationsPage() {
   const [filters, setFilters] = useState({
     year: "",
     type: "",
-    isVietnamLaborRelated: "",
+    isVietnamLabourRelated: "",
   });
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -182,8 +182,8 @@ export default function PublicationsPage() {
           </div>
           <div>
             <select
-              value={filters.isVietnamLaborRelated}
-              onChange={(e) => setFilters(prev => ({ ...prev, isVietnamLaborRelated: e.target.value }))}
+              value={filters.isVietnamLabourRelated}
+              onChange={(e) => setFilters(prev => ({ ...prev, isVietnamLabourRelated: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">All</option>
@@ -241,9 +241,9 @@ export default function PublicationsPage() {
                           <div className="text-sm font-medium text-gray-900 truncate">
                             {publication.title}
                           </div>
-                          <div className="text-sm text-gray-500 truncate">
-                            {publication.venue || "No source"}
-                          </div>
+                          <div className="text-sm text-gray-500 truncate" dangerouslySetInnerHTML={{ 
+                            __html: publication.citationDetail || "No citation detail"
+                          }} />
                           {publication.doi && (
                             <div className="text-xs text-blue-600 truncate">
                               DOI: {publication.doi}
@@ -294,11 +294,11 @@ export default function PublicationsPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {publication.isVietnamLaborRelated === true ? (
+                        {publication.isVietnamLabourRelated === true ? (
                           <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                             Yes
                           </span>
-                        ) : publication.isVietnamLaborRelated === false ? (
+                        ) : publication.isVietnamLabourRelated === false ? (
                           <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
                             No
                           </span>

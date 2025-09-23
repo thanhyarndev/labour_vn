@@ -52,6 +52,15 @@ const navigation = [
       </svg>
     )
   },
+  { 
+    name: "Contact Messages", 
+    href: "/admin/contacts", 
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+    )
+  },
 ];
 
 export default function AdminLayout({
@@ -61,9 +70,11 @@ export default function AdminLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
+    setMounted(true);
     // Check for saved theme preference or default to 'light'
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark';
     if (savedTheme) {
@@ -77,18 +88,51 @@ export default function AdminLayout({
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('theme', theme);
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    if (mounted) {
+      localStorage.setItem('theme', theme);
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
     }
-  }, [theme]);
+  }, [theme, mounted]);
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
   };
+
+  // Prevent hydration mismatch by not rendering theme-dependent styles until mounted
+  if (!mounted) {
+    return (
+      <ToastProvider>
+        <div className="min-h-screen font-sans flex bg-gray-50">
+          <div className="flex-1 min-h-screen flex flex-col">
+            <div className="sticky top-0 z-40 bg-white shadow-sm border-b border-gray-200">
+              <div className="flex items-center justify-between h-16 px-8">
+                <div className="flex items-center space-x-4">
+                  <div className="hidden lg:block">
+                    <h2 className="text-xl font-bold text-gray-900 font-serif">
+                      Research Portal
+                    </h2>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Loading...
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <main className="p-6">
+              <div className="max-w-7xl mx-auto">
+                {children}
+              </div>
+            </main>
+          </div>
+        </div>
+      </ToastProvider>
+    );
+  }
 
   return (
     <ToastProvider>
@@ -216,14 +260,16 @@ export default function AdminLayout({
                    pathname.includes("/keywords") ? "Research Keywords" :
                    pathname.includes("/scholars") ? "Research Scholars" :
                    pathname.includes("/publications") ? "Research Publications" :
-                   pathname.includes("/posts") ? "Posts & Updates" : "Research Portal"}
+                   pathname.includes("/posts") ? "Posts & Updates" :
+                   pathname.includes("/contacts") ? "Contact Messages" : "Research Portal"}
                 </h2>
                 <p className="text-sm text-slate-600 dark:text-gray-300 mt-1">
                   {pathname === "/admin" ? "Overview of research activities and metrics" : 
                    pathname.includes("/keywords") ? "Manage research keywords and topics" :
                    pathname.includes("/scholars") ? "Manage researcher profiles and expertise" :
                    pathname.includes("/publications") ? "Manage research publications and papers" :
-                   pathname.includes("/posts") ? "Manage blog posts and research updates" : "Research management system"}
+                   pathname.includes("/posts") ? "Manage blog posts and research updates" :
+                   pathname.includes("/contacts") ? "Manage and respond to contact form submissions" : "Research management system"}
                 </p>
               </div>
             </div>

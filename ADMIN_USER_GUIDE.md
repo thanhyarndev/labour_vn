@@ -1,4 +1,4 @@
-# Hướng Dẫn Sử Dụng Admin - Labor Vietnam
+# Hướng Dẫn Sử Dụng Admin - Labour Vietnam
 
 ## 📋 Tổng Quan
 Hệ thống admin cho phép quản lý Keywords, Publications, và Scholars. Tất cả đều có thể tạo, chỉnh sửa, xóa và liên kết với nhau.
@@ -21,8 +21,8 @@ Hệ thống admin cho phép quản lý Keywords, Publications, và Scholars. T�
 Click **"Tạo từ khóa mới"** và tạo các keywords sau:
 
 **Keyword 1:**
-- **Tên từ khóa:** `labor-rights`
-- **Tên hiển thị:** `Labor Rights`
+- **Tên từ khóa:** `labour-rights`
+- **Tên hiển thị:** `Labour Rights`
 - **Mô tả:** `Quyền lao động và bảo vệ người lao động`
 - **Aliases:** `quyền lao động, worker rights, employee rights`
 - **Trạng thái:** ✅ Đã phê duyệt
@@ -38,14 +38,14 @@ Click **"Tạo từ khóa mới"** và tạo các keywords sau:
 - **Tên từ khóa:** `trade-unions`
 - **Tên hiển thị:** `Trade Unions`
 - **Mô tả:** `Công đoàn và tổ chức người lao động`
-- **Aliases:** `công đoàn, labor unions, worker organizations`
+- **Aliases:** `công đoàn, labour unions, worker organizations`
 - **Trạng thái:** ✅ Đã phê duyệt
 
 **Keyword 4:**
 - **Tên từ khóa:** `employment-law`
 - **Tên hiển thị:** `Employment Law`
 - **Mô tả:** `Luật lao động và quy định việc làm`
-- **Aliases:** `luật lao động, labor law, workplace regulations`
+- **Aliases:** `luật lao động, labour law, workplace regulations`
 - **Trạng thái:** ✅ Đã phê duyệt
 
 ## 📚 Bước 3: Tạo Publications (Ấn Phẩm)
@@ -68,7 +68,7 @@ Click **"Tạo ấn phẩm mới"** và tạo các publications sau:
 - **Tóm tắt:** `This research investigates gender equality in Vietnamese workplaces, focusing on wage gaps, leadership opportunities, and workplace discrimination.`
 - **Quote:** `"Gender equality in Vietnamese workplaces has improved significantly over the past decade, but challenges remain in leadership representation."`
 - **Liên quan đến lao động Việt Nam:** ✅ Có
-- **Từ khóa:** Chọn `labor-rights`, `employment-law`
+- **Từ khóa:** Chọn `labour-rights`, `employment-law`
 
 **Publication 2:**
 - **Tiêu đề:** `Minimum Wage Increases and Employment Effects in Vietnam`
@@ -88,13 +88,13 @@ Click **"Tạo ấn phẩm mới"** và tạo các publications sau:
 - **Tác giả:** `Le Minh Cuong, Tran Thi Binh`
 - **Năm:** `2024`
 - **Loại ấn phẩm:** `Conference Paper`
-- **Tạp chí/Nhà xuất bản:** `International Labor Conference 2024`
+- **Tạp chí/Nhà xuất bản:** `International Labour Conference 2024`
 - **DOI:** `10.1234/ilc.2024.8.1.123`
 - **URL:** `https://example.com/publication/3`
 - **Tóm tắt:** `This paper examines the historical development of trade unions in Vietnam and their role in protecting worker rights.`
 - **Quote:** `"Trade unions in Vietnam have evolved from state-controlled organizations to more independent worker representation bodies."`
 - **Liên quan đến lao động Việt Nam:** ✅ Có
-- **Từ khóa:** Chọn `trade-unions`, `labor-rights`
+- **Từ khóa:** Chọn `trade-unions`, `labour-rights`
 
 ## 👨‍🎓 Bước 4: Tạo Scholars (Học Giả)
 
@@ -110,12 +110,12 @@ Click **"Tạo học giả mới"** và tạo các scholars sau:
 - **Tên đệm:** `Van`
 - **Tên:** `An`
 - **Danh hiệu:** `Dr.`
-- **Chức vụ:** `Professor of Labor Studies`
+- **Chức vụ:** `Professor of Labour Studies`
 - **Tổ chức:** `Vietnam National University, Hanoi`
 - **Khoa/Bộ môn:** `Asian Studies`
 - **Email:** `nguyen.van.an@university.edu.vn`
-- **Bio:** `Dr. Nguyen Van An is a leading expert in labor rights and employment law in Vietnam. He has published extensively on worker protection mechanisms and labor market reforms.`
-- **Từ khóa hiện có:** Chọn `labor-rights`, `minimum-wage`
+- **Bio:** `Dr. Nguyen Van An is a leading expert in labour rights and employment law in Vietnam. He has published extensively on worker protection mechanisms and labour market reforms.`
+- **Từ khóa hiện có:** Chọn `labour-rights`, `minimum-wage`
 - **Ấn phẩm hiện có:** Chọn Publication 1, Publication 2
 - **Trạng thái:** ✅ Hoạt động
 

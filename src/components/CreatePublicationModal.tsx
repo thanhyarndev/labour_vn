@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CreatePublicationInput } from "@/models";
+import SimpleRichTextEditor from "./SimpleRichTextEditor";
 
 interface CreatePublicationModalProps {
   isOpen: boolean;
@@ -21,7 +22,7 @@ export default function CreatePublicationModal({
   const [formData, setFormData] = useState<CreatePublicationInput>({
     title: "",
     authors: [scholarName],
-    journalPublisher: "",
+    citationDetail: "",
     year: new Date().getFullYear(),
     doi: "",
     url: "",
@@ -78,7 +79,7 @@ export default function CreatePublicationModal({
     setFormData({
       title: "",
       authors: [scholarName],
-      journalPublisher: "",
+      citationDetail: "",
       year: new Date().getFullYear(),
       doi: "",
       url: "",
@@ -189,20 +190,21 @@ export default function CreatePublicationModal({
                       </div>
                     </div>
 
-                    {/* Publication Venue and Year */}
+                    {/* Citation Detail and Year */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Publication Venue
+                          Citation Detail
                         </label>
-                        <input
-                          type="text"
-                          name="journalPublisher"
-                          value={formData.journalPublisher}
-                          onChange={handleInputChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          placeholder="Journal, publisher, conference..."
+                        <SimpleRichTextEditor
+                          value={formData.citationDetail || ""}
+                          onChange={(value) => setFormData(prev => ({ ...prev, citationDetail: value }))}
+                          placeholder="Journal, publisher, conference... (Use Ctrl+B for bold, Ctrl+I for italic)"
+                          className="w-full"
                         />
+                        <div className="text-xs text-gray-500 mt-1">
+                          Use <kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">Ctrl+B</kbd> for bold, <kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">Ctrl+I</kbd> for italic
+                        </div>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">

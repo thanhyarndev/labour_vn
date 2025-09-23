@@ -17,7 +17,7 @@ export async function GET(
     const limit = parseInt(searchParams.get('limit') || '20');
     const year = searchParams.get('year');
     const type = searchParams.get('type');
-    const isVietnamLaborRelated = searchParams.get('isVietnamLaborRelated');
+    const isVietnamLabourRelated = searchParams.get('isVietnamLabourRelated');
     const sortBy = searchParams.get('sortBy') || 'year'; // year, title, citations
     
     // Tìm scholar theo slug
@@ -53,8 +53,8 @@ export async function GET(
       query.type = type;
     }
     
-    if (isVietnamLaborRelated !== null) {
-      query.isVietnamLaborRelated = isVietnamLaborRelated === 'true';
+    if (isVietnamLabourRelated !== null) {
+      query.isVietnamLabourRelated = isVietnamLabourRelated === 'true';
     }
     
     const skip = (page - 1) * limit;

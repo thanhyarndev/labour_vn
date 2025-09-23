@@ -38,11 +38,11 @@ interface Scholar {
     year?: number;
     type?: string;
     authors: string[];
-    venue?: string;
+    citationDetail?: string;
     abstract?: string;
     doi?: string;
     url?: string;
-    isVietnamLaborRelated?: boolean;
+    isVietnamLabourRelated?: boolean;
   }>;
   publicationCount: number;
   relatedPublicationCount: number;
@@ -98,13 +98,13 @@ export default function ScholarProfilePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between">
               <Link href="/" className="text-2xl font-bold text-slate-900 dark:text-white">
-                Vietnam Labor Research Portal
+                Vietnam Labour Research Portal
               </Link>
               <nav className="flex space-x-6">
                 <Link href="/" className="text-slate-600 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white">
                   Home
                 </Link>
-                <Link href="/search" className="text-slate-600 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white">
+                <Link href="/" className="text-slate-600 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white">
                   Search
                 </Link>
                 <Link href="/occasional-contributors" className="text-slate-600 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white">
@@ -128,7 +128,7 @@ export default function ScholarProfilePage() {
             The scholar you&apos;re looking for doesn&apos;t exist or has been removed.
           </p>
           <Link
-            href="/search"
+            href="/"
             className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -162,7 +162,7 @@ export default function ScholarProfilePage() {
                 </svg>
               </li>
               <li>
-                <Link href="/search" className="text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-300">
+                <Link href="/" className="text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-300">
                   Search
                 </Link>
               </li>
@@ -332,8 +332,10 @@ export default function ScholarProfilePage() {
                       </h3>
                       <div className="text-sm text-slate-600 dark:text-gray-300 mb-2">
                         <p className="font-medium">{publication.authors.join(", ")}</p>
-                        {publication.venue && (
-                          <p className="italic">{publication.venue}</p>
+                        {publication.citationDetail && (
+                          <p className="italic" dangerouslySetInnerHTML={{ 
+                            __html: publication.citationDetail
+                          }} />
                         )}
                       </div>
                       <div className="flex items-center space-x-4 text-xs text-slate-500 dark:text-gray-400 mb-2">
@@ -429,7 +431,7 @@ export default function ScholarProfilePage() {
                   </a>
                 )}
                 <Link
-                  href="/search"
+                  href="/"
                   className="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-slate-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium rounded-lg transition-colors"
                 >
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -34,7 +34,7 @@ export default function WhyThisProjectPage() {
                 Vietnam Labour Research Portal is created to make scholarship on labour in Vietnam more visible to researchers, students, practitioners, and those who care about the world of work.
               </p>
               <p className="text-lg text-slate-600 dark:text-gray-300 mb-6">
-                It is a voluntary initiative by Tu Phuong Nguyen and Trang Tran. It serves as a supportive tool for researchers and students to discover existing work, learn from it, and advance this body of knowledge.
+              It is a voluntary initiative aiming to provide a supportive tool for researchers and students to discover existing work, learn from it, and advance this body of knowledge.
               </p>
               <p className="text-lg text-slate-600 dark:text-gray-300 mb-8">
                 This initiative builds on earlier efforts of compiling bibliographies and research materials for training workshops, and connecting the Vietnam labour research community. With this portal, we aim to provide a more systematic and accessible platform for knowledge sharing.
@@ -157,7 +157,7 @@ export default function WhyThisProjectPage() {
             {/* Call to Action */}
             <div className="mt-8 text-center">
               <Link
-                href="/search"
+                href="/"
                 className="inline-flex items-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
               >
                 Start Exploring Research
@@ -182,7 +182,7 @@ export default function WhyThisProjectPage() {
               <Link href="/" className="text-slate-300 hover:text-white transition-colors">
                 Home
               </Link>
-              <Link href="/search" className="text-slate-300 hover:text-white transition-colors">
+              <Link href="/" className="text-slate-300 hover:text-white transition-colors">
                 Search
               </Link>
               <Link href="/occasional-contributors" className="text-slate-300 hover:text-white transition-colors">

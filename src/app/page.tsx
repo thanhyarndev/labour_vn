@@ -1,316 +1,137 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import KeywordSearch from "@/components/KeywordSearch";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
-export default function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Mock search suggestions
-  const searchSuggestions = [
-    "Labor Law",
-    "Labor Relations",
-    "Minimum Wage",
-    "Occupational Safety",
-    "Social Insurance",
-    "Collective Bargaining",
-    "Labor Dispute Resolution",
-    "Women Workers",
-    "Child Labor",
-    "Trade Unions"
-  ];
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    
-    if (query.length > 0) {
-      const filtered = searchSuggestions.filter(suggestion =>
-        suggestion.toLowerCase().includes(query.toLowerCase())
-      );
-      setSuggestions(filtered.slice(0, 5));
-    } else {
-      setSuggestions([]);
-    }
-  };
-
-  const quickLinks = [
-    {
-      title: "Search Scholars",
-      description: "Find researchers and experts",
-      href: "/search",
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      ),
-      color: "from-blue-500 to-blue-600"
-    },
-    {
-      title: "Occasional Contributors",
-      description: "Discover valuable researchers",
-      href: "/occasional-contributors",
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-      ),
-      color: "from-green-500 to-green-600"
-    },
-    {
-      title: "About Us",
-      description: "Learn about our research portal",
-      href: "/about",
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-      color: "from-purple-500 to-purple-600"
-    },
-    {
-      title: "Research",
-      description: "Documents and reports",
-      href: "/research",
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-      ),
-      color: "from-orange-500 to-orange-600"
-    }
-  ];
-
-  const latestUpdates = [
-    {
-      title: "New Report on Vietnam Labor Situation 2024",
-      author: "Dr. Nguyen Van A",
-      date: "2 days ago",
-      type: "Report"
-    },
-    {
-      title: "Updated Regulations on Minimum Wage",
-      author: "Ministry of Labor, Invalids and Social Affairs",
-      date: "1 week ago",
-      type: "Regulation"
-    },
-    {
-      title: "International Conference on Labor Relations",
-      author: "Institute of Labor Science",
-      date: "2 weeks ago",
-      type: "Event"
-    }
-  ];
-
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-slate-600 dark:text-gray-300">Loading...</div>
-      </div>
-    );
-  }
-
+export default async function HomePage() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header */}
       <Header currentPage="home" />
+      
+      <main className="mx-auto max-w-6xl px-4 py-12">
+        {/* Hero Section */}
+        <header className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6 shadow-lg">
+            <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-6">
+            Vietnam Labour Research Portal
+          </h1>
+          <p className="text-2xl text-slate-700 font-medium mb-4">
+            A gateway to labour scholarship in Vietnam
+          </p>
+          <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            This website connects researchers, students, and practitioners to scholarship on labour in Vietnam, 
+            supporting new research and shared knowledge.
+          </p>
+        </header>
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left side - Content */}
-            <div className="text-center lg:text-left">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white mb-6 font-serif">
-                Vietnam Labor
-                <span className="block text-blue-600 dark:text-blue-400">Research Portal</span>
-              </h1>
-              <p className="text-xl text-slate-600 dark:text-gray-300 mb-8 leading-relaxed">
-                Comprehensive research portal for Vietnam labor studies. 
-                Discover, explore and connect with leading scholars and researchers.
+
+        {/* How this works section */}
+        <section className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">How this works</h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              Discover labour research in Vietnam through our simple three-step process
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="group text-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-200 hover:border-blue-300">
+              <div className="relative mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                  1
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold text-slate-900 mb-3">Type a keyword</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Type a keyword in the search bar (e.g. labour law, industrial relations)
               </p>
-              
-              {/* Search Bar */}
-              <div className="relative max-w-2xl mx-auto lg:mx-0">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    placeholder="Search research, documents, scholars..."
-                    className="w-full px-6 py-4 text-lg border-2 border-gray-200 dark:border-gray-600 rounded-full focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-800 text-slate-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 shadow-lg"
-                  />
-                  <Link 
-                    href={`/search?q=${encodeURIComponent(searchQuery)}`}
-                    className="absolute right-2 top-2 bottom-2 px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-colors flex items-center"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </Link>
-                </div>
-                
-                {/* Search Suggestions */}
-                {suggestions.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-10">
-                    {suggestions.map((suggestion, index) => (
-                      <button
-                        key={index}
-                        className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 text-slate-900 dark:text-white border-b border-gray-100 dark:border-gray-700 last:border-b-0"
-                        onClick={() => setSearchQuery(suggestion)}
-                      >
-                        {suggestion}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
             </div>
 
-            {/* Right side - Vietnam Map */}
-            <div className="flex justify-center lg:justify-end">
-              <div className="relative">
-                <Image
-                  src="/images/vietnammap.png"
-                  alt="Vietnam Map LEGO"
-                  width={600}
-                  height={400}
-                  className="rounded-lg shadow-2xl"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-blue-500/20 to-transparent rounded-lg"></div>
+            <div className="group text-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-200 hover:border-purple-300">
+              <div className="relative mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                  </svg>
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                  2
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold text-slate-900 mb-3">See scholars</h3>
+              <p className="text-slate-600 leading-relaxed">
+                See a list of scholars who have published on that topic
+              </p>
+            </div>
+
+            <div className="group text-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-200 hover:border-green-300">
+              <div className="relative mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                  3
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold text-slate-900 mb-3">Explore details</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Click a name to see bibliographical details of selected publications and links to their institutional profiles
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 p-8 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border-2 border-amber-200 shadow-lg">
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0">
+                <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-lg font-bold text-amber-900 mb-2">Important Notice</h4>
+                <p className="text-amber-800 leading-relaxed">
+                  <span className="font-semibold">We do not provide full-texts for publications.</span> 
+                  This portal serves as a research directory to help you discover scholars and their work. 
+                  See our <a href="/search-guide" className="text-amber-700 hover:text-amber-900 underline font-semibold">Search Guide</a>, 
+                  <a href="/why-this-project" className="text-amber-700 hover:text-amber-900 underline font-semibold ml-1">Why this project</a>, and 
+                  <Link href="/keywords" className="text-amber-700 hover:text-amber-900 underline font-semibold ml-1">List of Keywords</Link> to learn more about how to use this platform.
+                </p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Quick Links */}
-      <section className="py-20 bg-white dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4 font-serif">
-              Explore Portal
-            </h2>
-            <p className="text-xl text-slate-600 dark:text-gray-300">
-              Quick access to main features
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {quickLinks.map((link, index) => (
-              <Link
-                key={index}
-                href={link.href}
-                className="group bg-white dark:bg-gray-700 rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500"
-              >
-                <div className={`w-16 h-16 bg-gradient-to-r ${link.color} rounded-lg flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                  {link.icon}
-                </div>
-                <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                  {link.title}
-                </h3>
-                <p className="text-slate-600 dark:text-gray-300 group-hover:text-slate-700 dark:group-hover:text-gray-200 transition-colors">
-                  {link.description}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Latest Updates */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4 font-serif">
-              Latest Updates
-            </h2>
-            <p className="text-xl text-slate-600 dark:text-gray-300">
-              News and insights from the research community
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {latestUpdates.map((update, index) => (
-              <div
-                key={index}
-                className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-600"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm font-medium rounded-full">
-                    {update.type}
-                  </span>
-                  <span className="text-sm text-slate-500 dark:text-gray-400">
-                    {update.date}
-                  </span>
-                </div>
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-3 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer">
-                  {update.title}
-                </h3>
-                <p className="text-slate-600 dark:text-gray-300 text-sm">
-                  Author: {update.author}
-                </p>
-              </div>
-            ))}
-          </div>
-          
-          <div className="text-center mt-12">
-            <Link
-              href="/updates"
-              className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
-            >
-              View All Updates
-              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        {/* Search section */}
+        <section className="bg-white rounded-3xl shadow-xl border border-slate-200 p-8 md:p-12">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl mb-4">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-slate-900 dark:bg-gray-950 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold mb-4 font-serif">Vietnam Labor Research Portal</h3>
-            <p className="text-slate-300 mb-6">
-              Leading Vietnam labor research information portal
-            </p>
-            <div className="flex justify-center space-x-6">
-              <Link href="/search" className="text-slate-300 hover:text-white transition-colors">
-                Search
-              </Link>
-              <Link href="/occasional-contributors" className="text-slate-300 hover:text-white transition-colors">
-                Contributors
-              </Link>
-              <Link href="/about" className="text-slate-300 hover:text-white transition-colors">
-                About Us
-              </Link>
-              <Link href="/search-guide" className="text-slate-300 hover:text-white transition-colors">
-                Search Guide
-              </Link>
-              <Link href="/updates" className="text-slate-300 hover:text-white transition-colors">
-                Updates
-              </Link>
-              <Link href="/contact" className="text-slate-300 hover:text-white transition-colors">
-                Contact
-              </Link>
-              <Link href="/admin" className="text-slate-300 hover:text-white transition-colors">
-                Admin
-              </Link>
             </div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">Start your research journey</h2>
+            <p className="text-slate-600">Discover scholars and research in Vietnam&apos;s labour field</p>
           </div>
-        </div>
-      </footer>
+          <KeywordSearch />
+        </section>
+      </main>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
