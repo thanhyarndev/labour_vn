@@ -185,7 +185,7 @@ export default function CreateScholarPage() {
       setPublicationLoading(true);
       
       // Fetch all publications from the main API to get the full data
-      const response = await fetch('/api/admin/publications?limit=100');
+      const response = await fetch('/api/admin/publications/all');
       const data = await response.json();
       
       if (data.success) {

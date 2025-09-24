@@ -38,7 +38,7 @@ export default function LinkPublicationModal({
   const fetchPublications = async () => {
     try {
       setLoadingPublications(true);
-      const response = await fetch('/api/admin/publications?limit=50');
+      const response = await fetch('/api/admin/publications/all');
       const data = await response.json();
       
       console.log('Publications API response:', data);
