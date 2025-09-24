@@ -30,7 +30,7 @@ export default function CreatePublicationModal({
     abstract: "",
     quote: "",
     publicationType: "journal-article",
-    isSelected: false
+    isVietnamLabourRelated: true
   });
 
   const [newAuthor, setNewAuthor] = useState("");
@@ -87,7 +87,7 @@ export default function CreatePublicationModal({
       abstract: "",
       quote: "",
       publicationType: "journal-article",
-      isSelected: false
+      isVietnamLabourRelated: true
     });
     setNewAuthor("");
     onClose();
@@ -317,18 +317,19 @@ export default function CreatePublicationModal({
                       />
                     </div>
 
-                    {/* Selected Publication */}
-                    <div className="flex items-center">
+                    {/* Vietnam Labour Related */}
+                    <div className="flex items-center p-3 rounded-lg border border-gray-200 bg-gray-50">
                       <input
                         type="checkbox"
-                        name="isSelected"
-                        checked={formData.isSelected}
-                        onChange={(e) => setFormData(prev => ({ ...prev, isSelected: e.target.checked }))}
+                        name="isVietnamLabourRelated"
+                        checked={formData.isVietnamLabourRelated}
+                        onChange={(e) => setFormData(prev => ({ ...prev, isVietnamLabourRelated: e.target.checked }))}
                         className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                       />
-                      <label className="ml-2 text-sm text-gray-700">
-                        Mark as selected publication
-                      </label>
+                      <div className="ml-3">
+                        <span className="text-sm font-medium text-gray-700">Vietnam Labour Related</span>
+                        <p className="text-xs text-gray-500">This publication is related to Vietnam labour issues</p>
+                      </div>
                     </div>
                   </div>
                 </div>

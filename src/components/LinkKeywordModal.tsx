@@ -40,7 +40,8 @@ export default function LinkKeywordModal({
   const fetchKeywords = async () => {
     try {
       setLoadingKeywords(true);
-      const response = await fetch('/api/admin/keywords');
+      // Use dedicated endpoint for all keywords
+      const response = await fetch('/api/admin/keywords/all');
       if (response.ok) {
         const result = await response.json();
         setKeywords(result.data || []);

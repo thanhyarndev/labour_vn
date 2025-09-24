@@ -20,7 +20,7 @@ export default function NewPublicationPage() {
     url: "",
     citationCount: "",
     quote: "",
-    isSelected: false,
+    isVietnamLabourRelated: true,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -195,9 +195,6 @@ export default function NewPublicationPage() {
                 placeholder="Journal, publisher, conference... (Use Ctrl+B for bold, Ctrl+I for italic)"
                 className="w-full"
               />
-              <div className="text-xs text-gray-500 mt-1">
-                Use <kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">Ctrl+B</kbd> for bold, <kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">Ctrl+I</kbd> for italic
-              </div>
             </div>
 
             <div className="space-y-2">
@@ -301,14 +298,16 @@ export default function NewPublicationPage() {
                 <div className="flex items-center p-3 rounded-lg border border-gray-200">
                   <input
                     type="checkbox"
-                    name="isSelected"
-                    id="isSelected"
-                    checked={formData.isSelected}
-                    onChange={(e) => setFormData(prev => ({ ...prev, isSelected: e.target.checked }))}
+                    name="isVietnamLabourRelated"
+                    id="isVietnamLabourRelated"
+                    checked={formData.isVietnamLabourRelated}
+                    onChange={(e) => setFormData(prev => ({ ...prev, isVietnamLabourRelated: e.target.checked }))}
                     className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
                   />
                   <div className="ml-3">
-                    <span className="text-sm font-medium text-gray-700">Yes</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      {formData.isVietnamLabourRelated ? 'Yes' : 'No'}
+                    </span>
                     <p className="text-xs text-gray-500">This publication is related to Vietnam labour issues</p>
                   </div>
                 </div>

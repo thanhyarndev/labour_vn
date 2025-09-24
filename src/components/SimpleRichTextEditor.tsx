@@ -143,12 +143,6 @@ export default function SimpleRichTextEditor({
         suppressContentEditableWarning={true}
       />
       
-      {/* Placeholder - only show when editor is empty */}
-      {(!value || value === '' || value === '<br>' || value === '<div><br></div>') && (
-        <div className="absolute top-12 left-3 text-gray-400 pointer-events-none">
-          {placeholder}
-        </div>
-      )}
       
       {/* Custom CSS */}
       <style jsx global>{`

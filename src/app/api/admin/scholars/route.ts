@@ -132,20 +132,52 @@ export async function POST(request: NextRequest) {
       const input = ScholarCreateInput.parse(transformedBody);
       console.log('parsed input department:', input.department);
 
-      // 1) Handle Keywords: create new ones, find existing ones
+      // 1) Handle Keywords: OPTIMIZED - Parallel operations
       const allKeywords: any[] = [];
       const created: any[] = [];
       const errors: string[] = [];
       
-      // 1.1) Create new keywords if provided
+      // Prepare all keyword queries in parallel
+      const keywordQueries = [];
+      
+      // 1.1) Check for duplicate new keywords
+      if (input.newKeywords && input.newKeywords.length > 0) {
+        const newKeywordNames = input.newKeywords.map(k => k.name);
+        keywordQueries.push(
+          Keyword.find({ name: { $in: newKeywordNames } }, { name: 1 }, { session })
+        );
+      }
+      
+      // 1.2) Find existing keywords by slugs
+      if (input.keywordSlugs && input.keywordSlugs.length > 0) {
+        keywordQueries.push(
+          Keyword.find({ 
+            slug: { $in: input.keywordSlugs },
+            isApproved: true 
+          }, null, { session })
+        );
+      }
+      
+      // 1.3) Find existing keywords by IDs
+      if (body.keywordIds && body.keywordIds.length > 0) {
+        keywordQueries.push(
+          Keyword.find({ 
+            _id: { $in: body.keywordIds },
+            isApproved: true 
+          }, null, { session })
+        );
+      }
+      
+      // Execute all keyword queries in parallel
+      const keywordResults = await Promise.all(keywordQueries);
+      
+      // Process results
+      let resultIndex = 0;
+      
+      // Process new keywords
       if (input.newKeywords && input.newKeywords.length > 0) {
         try {
-          // Check for duplicate names before creating
-          const newKeywordNames = input.newKeywords.map(k => k.name);
-          const existingNames = await Keyword.find({ 
-            name: { $in: newKeywordNames } 
-          }, { name: 1 }, { session });
-          
+          const existingNames = keywordResults[resultIndex++];
           const existingNameSet = new Set(existingNames.map(k => k.name));
           const validNewKeywords = input.newKeywords.filter(k => !existingNameSet.has(k.name));
           const duplicateNames = input.newKeywords.filter(k => existingNameSet.has(k.name));
@@ -166,13 +198,10 @@ export async function POST(request: NextRequest) {
         }
       }
       
-      // 1.2) Find existing keywords by slugs
+      // Process existing keywords by slugs
       if (input.keywordSlugs && input.keywordSlugs.length > 0) {
         try {
-          const existing = await Keyword.find({ 
-            slug: { $in: input.keywordSlugs },
-            isApproved: true 
-          }, null, { session });
+          const existing = keywordResults[resultIndex++];
           
           if (existing.length !== input.keywordSlugs.length) {
             const foundSlugs = existing.map(k => k.slug);
@@ -191,13 +220,10 @@ export async function POST(request: NextRequest) {
         }
       }
       
-      // 1.3) Handle keywordIds from payload (if provided)
+      // Process existing keywords by IDs
       if (body.keywordIds && body.keywordIds.length > 0) {
         try {
-          const existingByIds = await Keyword.find({ 
-            _id: { $in: body.keywordIds },
-            isApproved: true 
-          }, null, { session });
+          const existingByIds = keywordResults[resultIndex++];
           
           if (existingByIds.length !== body.keywordIds.length) {
             const foundIds = existingByIds.map(k => k._id.toString());
@@ -269,38 +295,35 @@ export async function POST(request: NextRequest) {
         console.log('Updated scholar with department:', s.department);
       }
 
-      // 3) Handle Publications: link existing ones and create new ones
+      // 3) Handle Publications: OPTIMIZED - Bulk operations
       const allPublications: any[] = [];
       const createdPublications: any[] = [];
       let relatedCount = 0;
       
-      // 3.1) Link existing publications by ID
+      // 3.1) Link existing publications by ID - OPTIMIZED
       if (input.publicationIds && input.publicationIds.length > 0) {
         try {
           const existingPubs = await Publication.find({ 
             _id: { $in: input.publicationIds } 
           }, null, { session });
           
-          // Add scholar to existing publications
-          for (const pub of existingPubs) {
-            if (!pub.scholarIds.includes(s._id)) {
-              await Publication.updateOne(
-                { _id: pub._id },
-                { $addToSet: { scholarIds: s._id } },
-                { session }
-              );
-            }
-            allPublications.push(pub);
-            // For Vietnam Labor Research Portal, all linked publications are considered related
-            if (pub.isVietnamLabourRelated !== false) relatedCount += 1;
+          // Use bulkWrite for efficient updates
+          const bulkOps = existingPubs
+            .filter(pub => !pub.scholarIds.includes(s._id))
+            .map(pub => ({
+              updateOne: {
+                filter: { _id: pub._id },
+                update: { $addToSet: { scholarIds: s._id } }
+              }
+            }));
+          
+          if (bulkOps.length > 0) {
+            await Publication.bulkWrite(bulkOps, { session });
           }
           
-          // Update scholar with publication IDs
-          await Scholar.updateOne(
-            { _id: s._id },
-            { $addToSet: { publicationIds: { $each: input.publicationIds } } },
-            { session }
-          );
+          // Count related publications
+          relatedCount += existingPubs.filter(pub => pub.isVietnamLabourRelated !== false).length;
+          allPublications.push(...existingPubs);
           
           console.log(`Linked ${existingPubs.length} existing publications`);
         } catch (error: any) {
@@ -309,7 +332,7 @@ export async function POST(request: NextRequest) {
         }
       }
       
-      // 3.2) Create new publications
+      // 3.2) Create new publications - OPTIMIZED
       if (input.newPublications && input.newPublications.length > 0) {
         try {
           const newPubDocs = input.newPublications.map((p: any) => {
@@ -340,52 +363,30 @@ export async function POST(request: NextRequest) {
             };
           });
           
-          // Check for duplicate DOIs before creating
+          // Check for duplicate DOIs in parallel with publication creation
           const doisToCheck = newPubDocs.filter(p => p.doi).map(p => p.doi);
-          if (doisToCheck.length > 0) {
-            const existingDois = await Publication.find({ 
-              doi: { $in: doisToCheck } 
-            }, { doi: 1 }, { session });
-            
+          const [existingDois, createdPubs] = await Promise.all([
+            doisToCheck.length > 0 ? 
+              Publication.find({ doi: { $in: doisToCheck } }, { doi: 1 }, { session }) : 
+              Promise.resolve([]),
+            Publication.insertMany(newPubDocs, { session, ordered: false })
+          ]);
+          
+          // Filter out duplicates if any were found
+          if (existingDois.length > 0) {
             const existingDoiSet = new Set(existingDois.map(p => p.doi));
-            const validPubs = newPubDocs.filter(p => !p.doi || !existingDoiSet.has(p.doi));
             const duplicateDois = newPubDocs.filter(p => p.doi && existingDoiSet.has(p.doi));
             
             if (duplicateDois.length > 0) {
               console.warn(`Skipping publications with duplicate DOIs: ${duplicateDois.map(p => p.doi).join(', ')}`);
               errors.push(`Skipped publications with duplicate DOIs: ${duplicateDois.map(p => p.doi).join(', ')}`);
             }
-            
-            if (validPubs.length > 0) {
-              const createdPubs = await Publication.insertMany(validPubs, { session, ordered: false });
-              createdPublications.push(...createdPubs);
-              allPublications.push(...createdPubs);
-              
-              // Update scholar with new publication IDs
-              const newPubIds = createdPubs.map(pub => pub._id);
-              await Scholar.updateOne(
-                { _id: s._id },
-                { $addToSet: { publicationIds: { $each: newPubIds } } },
-                { session }
-              );
-              
-              console.log(`Created ${createdPubs.length} new publications`);
-            }
-          } else {
-            const createdPubs = await Publication.insertMany(newPubDocs, { session, ordered: false });
-            createdPublications.push(...createdPubs);
-            allPublications.push(...createdPubs);
-            
-            // Update scholar with new publication IDs
-            const newPubIds = createdPubs.map(pub => pub._id);
-            await Scholar.updateOne(
-              { _id: s._id },
-              { $addToSet: { publicationIds: { $each: newPubIds } } },
-              { session }
-            );
-            
-            console.log(`Created ${createdPubs.length} new publications`);
           }
+          
+          createdPublications.push(...createdPubs);
+          allPublications.push(...createdPubs);
+          
+          console.log(`Created ${createdPubs.length} new publications`);
         } catch (error: any) {
           console.error('Error creating new publications:', error);
           errors.push(`Failed to create new publications: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -442,25 +443,35 @@ export async function POST(request: NextRequest) {
         }
       }
       
-      // Update scholar with publication counts and IDs
+      // Update scholar with publication counts and IDs - OPTIMIZED
       if (allPublications.length > 0) {
         const publicationIds = allPublications.map(pub => pub._id);
         const frequentContributor = relatedCount >= 3;
+        
+        // Combine all scholar updates into a single operation
+        const updateData: any = {
+          publicationIds: publicationIds,
+          publicationCount: allPublications.length, 
+          relatedPublicationCount: relatedCount,
+          frequentContributor: frequentContributor
+        };
+        
+        // Add keyword data if we have keywords
+        if (uniqueKeywords.length > 0) {
+          updateData.keywordIds = keywordIds;
+          updateData.keywordNames = keywordNames;
+        }
+        
         await Scholar.updateOne(
           { _id: s._id },
-          { $set: { 
-            publicationIds: publicationIds,
-            publicationCount: allPublications.length, 
-            relatedPublicationCount: relatedCount,
-            frequentContributor: frequentContributor
-          } },
+          { $set: updateData },
           { session }
         );
       }
 
       await session.commitTransaction();
       
-      // Fetch updated scholar with populated data
+      // Fetch updated scholar with populated data - OPTIMIZED
       const updatedScholar = await Scholar.findById(s._id)
         .populate('keywordIds', 'name displayName slug')
         .populate('publicationIds', 'title authors year citationDetail type abstract doi url isVietnamLabourRelated')

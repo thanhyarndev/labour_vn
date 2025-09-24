@@ -40,7 +40,7 @@ export default function EditPublicationPage({ params }: { params: Promise<{ id: 
     url: "",
     citationCount: "",
     quote: "",
-    isSelected: false,
+    isVietnamLabourRelated: true,
   });
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function EditPublicationPage({ params }: { params: Promise<{ id: 
             url: pub.url || "",
             citationCount: pub.citations?.toString() || "",
             quote: pub.quote || "",
-            isSelected: pub.isVietnamLabourRelated === true,
+            isVietnamLabourRelated: pub.isVietnamLabourRelated === true,
           });
         } else {
           showError("Data Loading Error", data.error || "Unable to load publication information");
@@ -115,7 +115,7 @@ export default function EditPublicationPage({ params }: { params: Promise<{ id: 
           doi: formData.doi && formData.doi.trim() !== '' ? formData.doi : undefined,
           url: formData.url && formData.url.trim() !== '' ? formData.url : undefined,
           citations: formData.citationCount ? parseInt(formData.citationCount) : 0,
-          isVietnamLabourRelated: formData.isSelected,
+          isVietnamLabourRelated: formData.isVietnamLabourRelated,
         }),
       });
 
@@ -288,9 +288,6 @@ export default function EditPublicationPage({ params }: { params: Promise<{ id: 
                 placeholder="Journal, publisher, conference... (Use Ctrl+B for bold, Ctrl+I for italic)"
                 className="w-full"
               />
-              <div className="text-xs text-gray-500 mt-1">
-                Use <kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">Ctrl+B</kbd> for bold, <kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">Ctrl+I</kbd> for italic
-              </div>
             </div>
 
             <div className="space-y-2">
@@ -395,14 +392,16 @@ export default function EditPublicationPage({ params }: { params: Promise<{ id: 
                 <div className="flex items-center p-3 rounded-lg border border-gray-200">
                   <input
                     type="checkbox"
-                    name="isSelected"
-                    id="isSelected"
-                    checked={formData.isSelected}
-                    onChange={(e) => setFormData(prev => ({ ...prev, isSelected: e.target.checked }))}
+                    name="isVietnamLabourRelated"
+                    id="isVietnamLabourRelated"
+                    checked={formData.isVietnamLabourRelated}
+                    onChange={(e) => setFormData(prev => ({ ...prev, isVietnamLabourRelated: e.target.checked }))}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
                   <div className="ml-3">
-                    <span className="text-sm font-medium text-gray-700">Yes</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      {formData.isVietnamLabourRelated ? 'Yes' : 'No'}
+                    </span>
                     <p className="text-xs text-gray-500">This publication is related to Vietnam labour issues</p>
                   </div>
                 </div>

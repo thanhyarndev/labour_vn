@@ -20,10 +20,16 @@ const globalWithMongoose = global as unknown as GlobalWithMongoose;
 export async function connectToDatabase() {
 if (globalWithMongoose.mongooseConn) return globalWithMongoose.mongooseConn;
 if (!globalWithMongoose.mongoosePromise) {
+// Optimized connection settings for Vercel serverless
+mongoose.set('bufferCommands', false);
+
 globalWithMongoose.mongoosePromise = mongoose.connect(MONGODB_URI, {
 autoIndex: process.env.NODE_ENV !== "production",
-maxPoolSize: 10,
-serverSelectionTimeoutMS: 10000,
+maxPoolSize: 5, // Reduced for serverless
+serverSelectionTimeoutMS: 5000, // Reduced timeout
+socketTimeoutMS: 45000,
+connectTimeoutMS: 10000,
+bufferCommands: false,
 });
 }
 globalWithMongoose.mongooseConn = await globalWithMongoose.mongoosePromise;

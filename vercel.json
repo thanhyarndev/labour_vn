@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "src/app/api/admin/scholars/route.ts": {
+      "maxDuration": 30
+    }
+  },
+  "regions": ["sin1"]
+}
