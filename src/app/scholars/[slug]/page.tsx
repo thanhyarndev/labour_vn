@@ -18,11 +18,8 @@ interface Scholar {
   position?: string;
   email?: string;
   phone?: string;
-  website?: string;
-  orcidId?: string;
-  googleScholarUrl?: string;
+  scholarUrl?: string;
   institutionalProfileUrl?: string;
-  homepageUrl?: string;
   bio?: string;
   researchInterests?: string;
   expertiseAreas?: string;
@@ -204,7 +201,7 @@ export default function ScholarProfilePage() {
               {/* Contact Info */}
               <div className="mb-6">
                 <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3 uppercase tracking-wide">
-                  Contact & Links
+                  Links
                 </h3>
                 <div className="space-y-3">
                   {scholar.email && (
@@ -217,13 +214,13 @@ export default function ScholarProfilePage() {
                       </a>
                     </div>
                   )}
-                  {scholar.googleScholarUrl && (
+                  {scholar.scholarUrl && (
                     <div className="flex items-center text-sm text-slate-600 dark:text-gray-300">
                       <svg className="w-4 h-4 mr-3 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/>
                       </svg>
-                      <a href={scholar.googleScholarUrl} target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400">
-                        Google Scholar
+                      <a href={scholar.scholarUrl} target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400">
+                        Google Scholar Profile
                       </a>
                     </div>
                   )}
@@ -237,31 +234,11 @@ export default function ScholarProfilePage() {
                       </a>
                     </div>
                   )}
-                  {scholar.homepageUrl && (
-                    <div className="flex items-center text-sm text-slate-600 dark:text-gray-300">
-                      <svg className="w-4 h-4 mr-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                      <a href={scholar.homepageUrl} target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400">
-                        Personal Homepage
-                      </a>
-                    </div>
-                  )}
-                  {scholar.orcidId && (
-                    <div className="flex items-center text-sm text-slate-600 dark:text-gray-300">
-                      <svg className="w-4 h-4 mr-3 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm5.568 8.16c-.169 0-.327.067-.445.189l-5.123 5.123-2.123-2.123c-.118-.122-.276-.189-.445-.189s-.327.067-.445.189c-.244.244-.244.646 0 .89l2.568 2.568c.122.122.276.189.445.189s.327-.067.445-.189l5.568-5.568c.244-.244.244-.646 0-.89-.118-.122-.276-.189-.445-.189z"/>
-                      </svg>
-                      <a href={`https://orcid.org/${scholar.orcidId}`} target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400">
-                        ORCID: {scholar.orcidId}
-                      </a>
-                    </div>
-                  )}
                 </div>
               </div>
 
               {/* Statistics */}
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3 uppercase tracking-wide">
                   Statistics
                 </h3>
@@ -283,12 +260,12 @@ export default function ScholarProfilePage() {
                     </span>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               {/* Research Areas */}
               <div>
                 <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3 uppercase tracking-wide">
-                  Research Areas
+                  Keywords
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {scholar.keywordIds.map((keyword, index) => (
@@ -396,7 +373,7 @@ export default function ScholarProfilePage() {
 
 
             {/* Research Interests */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            {/* <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
                 Research Interests
               </h2>
@@ -410,11 +387,11 @@ export default function ScholarProfilePage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
 
 
             {/* Contact Actions */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            {/* <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
                 Get in Touch
               </h2>
@@ -440,7 +417,7 @@ export default function ScholarProfilePage() {
                   Search More Scholars
                 </Link>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
